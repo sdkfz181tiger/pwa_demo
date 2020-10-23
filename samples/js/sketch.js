@@ -12,12 +12,7 @@ let tSize, fSize;
 
 // Window
 window.addEventListener("load", (e)=>{
-	//showMsg("onload");
-	init();
-});
-
-function init(){
-	//showMsg("init");
+	showMsg("load");
 
 	// Window width, height
 	dWidth = document.body.clientWidth;
