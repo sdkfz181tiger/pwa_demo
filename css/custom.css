@@ -1,0 +1,27 @@
+/* custom.css */
+
+body{
+	margin: 0px; padding: 0px;
+	background-color: #000000;
+	color: #cccccc;
+}
+
+#canvas{
+	margin: 0px; padding: 0px;
+	width: auto; height: auto;
+	background-color: #000000;
+}
+
+#msg_area{
+	margin: auto; padding: auto;
+	width: auto; height: auto;
+	position: absolute;
+	top: 0px; left: 0px;
+}
+
+#test_area{
+	margin: auto; padding: auto;
+	width: auto; height: auto;
+	position: absolute;
+	top: 0px; right: 0px;
+}
