@@ -7,13 +7,14 @@ let canvas, ctx, sMng;
 
 // Window
 window.addEventListener("load", (e)=>{
-	showMsg("onload");
+	//showMsg("onload");
 	registerServiceWorker(init);
 });
 
 function init(){
-	showMsg("init");
+	//showMsg("init");
 
+	/*
 	// Window width, height
 	dWidth = document.body.clientWidth;
 	dHeight = document.body.clientHeight;
@@ -45,8 +46,8 @@ function init(){
 			ctx.drawImage(logo, logoX, logoY, logoW, logoH);
 		}
 	});
+	*/
 
-	/*
 	// Window width, height
 	dWidth = document.body.clientWidth;
 	dHeight = document.body.clientHeight;
@@ -70,5 +71,4 @@ function init(){
 	sMng = new SamegameManager(sX, sY, palette.length);
 	sMng.checkMtx();// Test
 	update();// Update
-	*/
 }
