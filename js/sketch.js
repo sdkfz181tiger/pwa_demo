@@ -7,6 +7,7 @@ const GRIDS  = 6;
 
 let dWidth, dHeight;
 let canvas, ctx, sMng;
+
 let tSize, fSize;
 
 // Window
