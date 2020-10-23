@@ -6,3 +6,4 @@ function showMsg(msg){
 	let li = $("<li>").text(msg);
 	$("#msg_area").prepend(li);
 }
+
