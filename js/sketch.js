@@ -2,6 +2,9 @@
 //==========
 // JavaScript
 
+const palette = ["#233D4D", "#FE7F2D", "#FCCA46", "#A1C181", "#619B8A"];
+const GRIDS  = 6;
+
 let dWidth, dHeight;
 let canvas, ctx, sMng;
 
