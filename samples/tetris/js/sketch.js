@@ -99,7 +99,7 @@ const MINO_T = [
 	 0, 0, 0, 0]
 ];
 
-const MINOS = [MINO_I, MINO_L, MINO_J, MINO_O, MINO_S, MINO_Z, MINO_T];
+const MINOS  = [MINO_I, MINO_L, MINO_J, MINO_O, MINO_S, MINO_Z, MINO_T];
 
 const COLORS = ["#E60012", "#F39800", "#FFF100", "#009944", "#0068B7", "#1D2088", "#920783"];
 
@@ -123,11 +123,15 @@ function init(){
 	dWidth = document.body.clientWidth;
 	dHeight = document.body.clientHeight;
 	// Canvas
-	canvas  = document.getElementById("canvas");
+	canvas = document.getElementById("canvas");
 	canvas.width  = dWidth;
 	canvas.height = dHeight;
 	// Context
 	ctx = canvas.getContext("2d");
+	ctx.font        = SIZE + "px Arial";
+	ctx.textAlign   = "center";
+	ctx.strokeStyle = "#ffffff";
+	ctx.lineWidth   = 2;
 	// Offset
 	oX = Math.floor(dWidth / 2 - COLS * SIZE / 2);
 	oY = Math.floor(dHeight / 2 - ROWS * SIZE / 2);
@@ -146,7 +150,8 @@ function step(){
 	}
 	let dels = tMng.stepTetris();// Step
 	if(0 < dels){
-		console.log("You deleted:" + dels + " lines!!");
+		showMsg("Deleted:" + dels + " lines!!");
+		console.log("Deleted:" + dels + " lines!!");
 	}
 	tMng.showConsole(tMng.getData());// Show
 	setTimeout(step, 1000);
@@ -156,11 +161,14 @@ function step(){
 function update(){
 
 	// Background
-	ctx.fillStyle = "#666666";
+	ctx.fillStyle = "#333333";
 	ctx.fillRect(0, 0, dWidth, dHeight);
-
-	ctx.fillStyle = "#999999";
+	ctx.fillStyle = "#444444";
 	ctx.fillRect(oX, oY, COLS*SIZE, ROWS*SIZE);
+
+	// Text
+	ctx.fillStyle = "#cccccc";
+	ctx.fillText("Tetris!!", dWidth/2, dHeight/2-SIZE*ROWS/2-SIZE);
 
 	let data = tMng.getData();
 	for(let r=0; r<ROWS; r++){
