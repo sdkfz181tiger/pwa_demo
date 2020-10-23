@@ -7,12 +7,12 @@ let canvas, ctx, sMng;
 
 // Window
 window.addEventListener("load", (e)=>{
-	//showMsg("onload");
+	showMsg("onload");
 	registerServiceWorker(init);
 });
 
 function init(){
-	//showMsg("init");
+	showMsg("init");
 
 	/*
 	// Window width, height
