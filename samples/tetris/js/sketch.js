@@ -165,7 +165,6 @@ function update(){
 	ctx.fillRect(0, 0, dWidth, dHeight);
 	ctx.fillStyle = "#444444";
 	ctx.fillRect(oX, oY, COLS*SIZE, ROWS*SIZE);
-
 	// Text
 	ctx.fillStyle = "#cccccc";
 	ctx.fillText("Tetris!!", dWidth/2, dHeight/2-SIZE*ROWS/2-SIZE);

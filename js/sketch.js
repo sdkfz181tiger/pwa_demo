@@ -15,17 +15,16 @@ function init(){
 	showMsg("init");
 
 	// Window width, height
-	dWidth = document.body.clientWidth;
-	dHeight = document.body.clientHeight;
+	dWidth = window.innerWidth;
+	dHeight = window.innerHeight;
 	// Canvas
 	canvas  = document.getElementById("canvas");
-	canvas.width  = dWidth;
+	canvas.width = dWidth;
 	canvas.height = dHeight;
 	// Context
 	ctx = canvas.getContext("2d");
 	ctx.fillStyle = "rgb(33, 33, 33)";
 	ctx.fillRect(0, 0, dWidth, dHeight);
-
 	// Logo
 	let logo = new Image();
 	logo.src = "./images/logo512x512.png";
