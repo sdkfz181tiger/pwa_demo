@@ -1,7 +1,7 @@
 //==========
 // ServiceWorker
 
-const CACHE_VERSION = "cache_0.0.9";
+const CACHE_VERSION = "cache_0.1.0";
 const CACHE_FILES = [
 	"./index.html",
 	"./css/custom.css",
@@ -13,13 +13,8 @@ const CACHE_FILES = [
 	"./images/icons/icon152x152.png",
 	"./images/icons/icon192x192.png",
 	"./images/icons/icon512x512.png",
-	"./images/food_01.png",
-	"./images/food_02.png",
-	"./images/food_03.png",
-	"./images/food_04.png",
-	"./images/food_05.png",
-	"./images/food_06.png",
-	"./images/food_07.png"
+	"./images/logo512x512.png",
+	"./samples/"
 ];
 
 // Place files that need to be executed offline 
