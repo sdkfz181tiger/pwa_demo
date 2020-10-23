@@ -103,12 +103,11 @@ const MINOS = [MINO_I, MINO_L, MINO_J, MINO_O, MINO_S, MINO_Z, MINO_T];
 
 const COLORS = ["#E60012", "#F39800", "#FFF100", "#009944", "#0068B7", "#1D2088", "#920783"];
 
-const WIDTH  = 240;
-const HEIGHT = 320;
 const ROWS   = 18;
 const COLS   = 10;
 const SIZE   = 16;
 
+let dWidth, dHeight;
 let canvas, ctx, oX, oY, tMng;
 
 // Window
@@ -120,15 +119,18 @@ window.addEventListener("load", (e)=>{
 function init(){
 	showMsg("init");
 
+	// Window width, height
+	dWidth = document.body.clientWidth;
+	dHeight = document.body.clientHeight;
 	// Canvas
 	canvas  = document.getElementById("canvas");
-	canvas.width  = WIDTH;
-	canvas.height = HEIGHT;
+	canvas.width  = dWidth;
+	canvas.height = dHeight;
 	// Context
 	ctx = canvas.getContext("2d");
 	// Offset
-	oX = Math.floor(WIDTH / 2 - COLS * SIZE / 2);
-	oY = Math.floor(HEIGHT / 2 - ROWS * SIZE / 2);
+	oX = Math.floor(dWidth / 2 - COLS * SIZE / 2);
+	oY = Math.floor(dHeight / 2 - ROWS * SIZE / 2);
 	// TetrisManager
 	tMng = new TetrisManager(ROWS, COLS, MINOS, true);
 	step();  // Step
@@ -137,6 +139,7 @@ function init(){
 
 // Step
 function step(){
+	// GameOver
 	if(tMng.isGameOver()){
 		console.log("GAME OVER");
 		return;
@@ -145,6 +148,7 @@ function step(){
 	if(0 < dels){
 		console.log("You deleted:" + dels + " lines!!");
 	}
+	tMng.showConsole(tMng.getData());// Show
 	setTimeout(step, 1000);
 }
 
@@ -153,7 +157,7 @@ function update(){
 
 	// Background
 	ctx.fillStyle = "#666666";
-	ctx.fillRect(0, 0, WIDTH, HEIGHT);
+	ctx.fillRect(0, 0, dWidth, dHeight);
 
 	ctx.fillStyle = "#999999";
 	ctx.fillRect(oX, oY, COLS*SIZE, ROWS*SIZE);

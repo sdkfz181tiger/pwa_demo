@@ -215,6 +215,10 @@ class TetrisManager{
 				data[i] = this._mino.getGrid(r, c);
 			}
 		}
+		return data;
+	}
+
+	showConsole(data){
 		let bar = "";
 		for(let b=0; b<this._cols*2+3; b++) bar += "=";
 		bar += "\n";
@@ -232,7 +236,6 @@ class TetrisManager{
 			console.clear();
 			console.log(str);
 		}
-		return data;
 	}
 }
 
