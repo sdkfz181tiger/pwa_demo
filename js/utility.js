@@ -1,5 +1,12 @@
 "use strict";
 
+// Show message
+function showMsg(msg){
+	console.log(msg);
+	let li = $("<li>").text(msg);
+	$("#msg_area").prepend(li);
+}
+
 // Register ServiceWorker
 function registerServiceWorker(callback){
 	if("serviceWorker" in navigator){
@@ -13,11 +20,4 @@ function registerServiceWorker(callback){
 				console.log("Registration failed with", error);
 			});
 	}
-}
-
-// Show message
-function showMsg(msg){
-	console.log(msg);
-	let li = $("<li>").text(msg);
-	$("#msg_area").prepend(li);
 }
