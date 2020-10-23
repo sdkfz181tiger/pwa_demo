@@ -5,10 +5,12 @@ function registerServiceWorker(callback){
 	if("serviceWorker" in navigator){
 		navigator.serviceWorker.register("service_worker.js", 
 			{scope: "./"}).then((reg)=>{
-				showMsg("ServiceWorker registered", reg);
+				showMsg("ServiceWorker registered");
+				console.log("ServiceWorker registered", reg);
 				callback();// Callback
 			}).catch((error)=>{
-				showMsg("Registration failed with", error);
+				showMsg("Registration failed");
+				console.log("Registration failed with", error);
 			});
 	}
 }
