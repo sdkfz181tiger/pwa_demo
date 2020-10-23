@@ -25,3 +25,7 @@ body{
 	position: absolute;
 	top: 0px; right: 0px;
 }
+
+a:link,:visited,:hover,:active,:focus{
+	color: orange;
+}
