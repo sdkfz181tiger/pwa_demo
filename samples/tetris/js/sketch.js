@@ -120,7 +120,7 @@ function init(){
 	showMsg("init");
 
 	// Window width, height
-	dWidth = document.body.clientWidth;
+	dWidth  = document.body.clientWidth;
 	dHeight = document.body.clientHeight;
 	// Block size
 	bSize = dHeight / (ROWS+6);
@@ -136,14 +136,14 @@ function init(){
 	ctx.strokeStyle = "#ffffff";
 	ctx.lineWidth   = 2;
 	// Offset
-	oX = Math.floor(dWidth/2 - COLS*bSize/2);
+	oX = Math.floor(dWidth*0.5 - COLS*bSize*0.5);
 	oY = Math.floor(bSize*1.5);
 	// TetrisManager
 	tMng = new TetrisManager(ROWS, COLS, MINOS, true);
 	// Button
 	bControll = new ButtonControl(dWidth*0.5-bSize*3, dHeight-bSize*3, 32);
-	bRotL = new Button(dWidth*0.5+bSize*1.5, dHeight-bSize*2.5, 32);
-	bRotR = new Button(dWidth*0.5+bSize*4.0, dHeight-bSize*2.5, 32);
+	bRotL = new Button(dWidth*0.5+bSize*2, dHeight-bSize*2.5, 32);
+	bRotR = new Button(dWidth*0.5+bSize*4, dHeight-bSize*2.5, 32);
 	step();  // Step
 	update();// Update
 }
@@ -231,10 +231,10 @@ class ButtonControl{
 	constructor(x, y, size){
 		this._x = x;
 		this._y = y;
-		this._size = size*0.5;
-		this._bLeft = new Button(x-size, y, size);
+		this._size   = size*0.5;
+		this._bLeft  = new Button(x-size, y, size);
 		this._bRight = new Button(x+size, y, size);
-		this._bDown = new Button(x, y+size, size);
+		this._bDown  = new Button(x, y+size, size);
 	}
 
 	clickLeft(e){
