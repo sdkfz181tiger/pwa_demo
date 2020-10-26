@@ -12,18 +12,22 @@ body{
 	background-color: #000000;
 }
 
-#msg_area{
-	margin: auto; padding: auto;
+#menu_area{
+	margin: 10px; padding: 5px;
 	width: auto; height: auto;
-	position: absolute;
+	position: absolute; list-style: none;
+	top: 0px; right: 0px;
+}
+
+#msg_area{
+	margin: 10px; padding: 5px;
+	width: auto; height: auto;
+	position: absolute; list-style: none;
 	top: 0px; left: 0px;
 }
 
-#test_area{
-	margin: auto; padding: auto;
-	width: auto; height: auto;
-	position: absolute;
-	top: 0px; right: 0px;
+li{
+	margin: 0px; padding: 2px;
 }
 
 a:link,:visited,:hover,:active,:focus{
