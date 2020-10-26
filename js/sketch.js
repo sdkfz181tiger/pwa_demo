@@ -23,7 +23,7 @@ function init(){
 	canvas.height = dHeight;
 	// Context
 	ctx = canvas.getContext("2d");
-	ctx.fillStyle = "rgb(33, 33, 33)";
+	ctx.fillStyle = "rgb(0, 0, 0)";
 	ctx.fillRect(0, 0, dWidth, dHeight);
 	// Logo
 	let logo = new Image();
