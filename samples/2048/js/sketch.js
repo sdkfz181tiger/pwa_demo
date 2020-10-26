@@ -32,10 +32,10 @@ function setup(){
 	hm.on("pandown", actionDown);
 
 	if(width < height){
-		tilePadding = width / 6;
+		tilePadding = width / 5;
 		tileSize = tilePadding * 0.95;
 	}else{
-		tilePadding = height / 6;
+		tilePadding = height / 5;
 		tileSize = tilePadding * 0.95;
 	}
 
