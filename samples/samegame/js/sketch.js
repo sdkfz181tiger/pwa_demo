@@ -47,7 +47,7 @@ function init(){
 // Update
 function update(){
 	// Clear
-	ctx.fillStyle = "#333333";
+	ctx.fillStyle = "#000000";
 	ctx.fillRect(0, 0, dWidth, dHeight);
 	// Text
 	ctx.fillStyle = "#cccccc";
