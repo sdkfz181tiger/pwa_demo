@@ -7,7 +7,7 @@ const F_COLOR = ["#CCCCCC", "#333333", "#333333", "#333333", "#333333"];
 
 const T_GRIDS  = 4;
 
-let tMng;
+let tMng, hm;
 let tilePadding, tileSize, tileCorner, tiles;
 let fontSize, sX, sY;
 let lockFlg;
@@ -21,6 +21,15 @@ function setup(){
 	tMng.randomPut();
 	tMng.randomPut();
 	tMng.consoleBoard();
+
+	// Hammer
+	let options = {preventDefault: true};
+	hm = new Hammer(document.body, options);
+	hm.get("pan").set({direction: Hammer.DIRECTION_ALL});
+	hm.on("panleft", actionLeft);
+	hm.on("panright", actionRight);
+	hm.on("panup", actionUp);
+	hm.on("pandown", actionDown);
 
 	if(width < height){
 		tilePadding = width / 6;
