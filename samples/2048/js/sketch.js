@@ -14,7 +14,7 @@ let lockFlg;
 
 function setup(){
 	createCanvas(windowWidth, windowHeight);
-	frameRate(16);
+	frameRate(32);
 
 	// 2048
 	tMng = new TzfeManager();
