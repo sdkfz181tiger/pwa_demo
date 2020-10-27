@@ -187,9 +187,6 @@ function update(){
 	ctx.fillRect(0, 0, dWidth, dHeight);
 	ctx.fillStyle = "#444444";
 	ctx.fillRect(oX, oY, COLS*bSize, ROWS*bSize);
-	// Text
-	ctx.fillStyle = "#cccccc";
-	ctx.fillText("Tetris!!", dWidth/2, bSize);
 	// Tetris
 	let data = tMng.getData();
 	for(let r=0; r<ROWS; r++){
