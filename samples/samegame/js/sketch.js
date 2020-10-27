@@ -2,7 +2,7 @@
 //==========
 // JavaScript
 
-const palette = ["#233D4D", "#FE7F2D", "#FCCA46", "#A1C181", "#619B8A"];
+const COLORS = ["#233D4D", "#FE7F2D", "#FCCA46", "#A1C181", "#619B8A"];
 const GRIDS  = 6;
 
 let dWidth, dHeight;
@@ -39,7 +39,7 @@ function init(){
 	// SamegameManager
 	let sX = dWidth/2  - GRIDS*tSize/2;
 	let sY = dHeight/2 - GRIDS*tSize/2;
-	sMng = new SamegameManager(sX, sY, palette.length);
+	sMng = new SamegameManager(sX, sY, COLORS.length);
 	sMng.checkMtx();// Test
 	update();// Update
 }
@@ -63,7 +63,7 @@ function update(){
 		for(let c=0; c<GRIDS; c++){
 			let tile = mtx[r][c];
 			if(tile == null) continue;
-			ctx.fillStyle = palette[Math.floor(tile.type%palette.length)];
+			ctx.fillStyle = COLORS[Math.floor(tile.type%COLORS.length)];
 			ctx.fillRect(tile.x, tile.y, tSize*0.98, tSize*0.98);
 			ctx.fillStyle = "#ffffff";
 			ctx.fillText(tile.type, tile.x+tSize*0.5, tile.y+tSize*0.7);

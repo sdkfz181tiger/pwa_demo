@@ -100,7 +100,7 @@ const MINO_T = [
 ];
 
 const MINOS  = [MINO_I, MINO_L, MINO_J, MINO_O, MINO_S, MINO_Z, MINO_T];
-const COLORS = ["#E60012", "#F39800", "#FFF100", "#009944", "#0068B7", "#1D2088", "#920783"];
+const COLORS = ["#F94144", "#233D4D", "#FE7F2D", "#FCCA46", "#A1C181", "#619B8A", "#277DA1"];
 const ROWS   = 18;
 const COLS   = 10;
 
