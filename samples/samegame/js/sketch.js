@@ -18,7 +18,6 @@ window.addEventListener("load", (e)=>{
 
 function init(){
 	showMsg("init");
-
 	// Window width, height
 	dWidth = document.body.clientWidth;
 	dHeight = document.body.clientHeight;
@@ -49,9 +48,6 @@ function update(){
 	// Clear
 	ctx.fillStyle = "#000000";
 	ctx.fillRect(0, 0, dWidth, dHeight);
-	// Text
-	ctx.fillStyle = "#cccccc";
-	ctx.fillText("SameGame!!", dWidth/2, (dHeight-tSize*GRIDS)/4+fSize*0.5);
 	// Background
 	let sX = dWidth/2  - GRIDS*tSize/2;
 	let sY = dHeight/2 - GRIDS*tSize/2;
