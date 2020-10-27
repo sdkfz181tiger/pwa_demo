@@ -105,8 +105,8 @@ const ROWS   = 18;
 const COLS   = 10;
 
 let dWidth, dHeight;
-let canvas, ctx, bSize, fSize, oX, oY, tMng;
-let bControll, bRotL, bRotR;
+let canvas, ctx, bSize, fSize, oX, oY;
+let tMng, hm;
 
 // Window
 window.addEventListener("load", (e)=>{
@@ -121,7 +121,7 @@ function init(){
 	dWidth  = document.body.clientWidth;
 	dHeight = document.body.clientHeight;
 	// Block size
-	bSize = dHeight / (ROWS+6);
+	bSize = dHeight / (ROWS+4);
 	fSize = bSize;
 	// Canvas
 	canvas = document.getElementById("canvas");
@@ -135,13 +135,30 @@ function init(){
 	ctx.lineWidth   = 2;
 	// Offset
 	oX = Math.floor(dWidth*0.5 - COLS*bSize*0.5);
-	oY = Math.floor(bSize*1.5);
+	oY = Math.floor(dHeight*0.5 - ROWS*bSize*0.5);
 	// TetrisManager
 	tMng = new TetrisManager(ROWS, COLS, MINOS, true);
-	// Button
-	bControll = new ButtonControl(dWidth*0.5-bSize*3, dHeight-bSize*3, 32);
-	bRotL = new Button(dWidth*0.5+bSize*2, dHeight-bSize*2.5, 32);
-	bRotR = new Button(dWidth*0.5+bSize*4, dHeight-bSize*2.5, 32);
+	// Hammer
+	let options = {recognizers: [
+		[Hammer.Pan, {direction: Hammer.DIRECTION_ALL, threshold:bSize*2}],
+		[Hammer.Tap]
+	]};
+	hm = new Hammer(document.body, options);
+	hm.on("panleft", (e)=>{
+		hm.stop();
+		if(!tMng.isGameOver()) tMng.actionLeft();
+	});
+	hm.on("panright", (e)=>{
+		hm.stop();
+		if(!tMng.isGameOver()) tMng.actionRight();
+	});
+	hm.on("pandown", (e)=>{
+		hm.stop();
+		if(!tMng.isGameOver()) tMng.actionDown();
+	});
+	hm.on("tap", (e)=>{
+		if(!tMng.isGameOver()) tMng.actionRotateL();
+	});
 	step();  // Step
 	update();// Update
 }
@@ -185,21 +202,8 @@ function update(){
 			ctx.fillRect(x, y, bSize-1, bSize-1);
 		}
 	}
-	// Button
-	bControll.draw(ctx);
-	bRotL.draw(ctx);
-	bRotR.draw(ctx);
 	setTimeout(update, 100);
 }
-
-document.addEventListener("click", (e)=>{
-	if(tMng.isGameOver()) return;
-	if(bControll.clickLeft(e)) tMng.actionLeft();
-	if(bControll.clickRight(e)) tMng.actionRight();
-	if(bControll.clickDown(e)) tMng.actionDown();
-	if(bRotL.click(e)) tMng.actionRotateL();
-	if(bRotR.click(e)) tMng.actionRotateR();
-});
 
 // Keyboard
 document.addEventListener("keydown", (e)=>{
@@ -223,57 +227,3 @@ document.addEventListener("keydown", (e)=>{
 		//tMng.actionRotateR();
 	}
 });
-
-class ButtonControl{
-
-	constructor(x, y, size){
-		this._x = x;
-		this._y = y;
-		this._size   = size*0.5;
-		this._bLeft  = new Button(x-size, y, size);
-		this._bRight = new Button(x+size, y, size);
-		this._bDown  = new Button(x, y+size, size);
-	}
-
-	clickLeft(e){
-		return this._bLeft.click(e);
-	}
-
-	clickRight(e){
-		return this._bRight.click(e);
-	}
-
-	clickDown(e){
-		return this._bDown.click(e);
-	}
-
-	draw(ctx){
-		this._bLeft.draw(ctx);
-		this._bRight.draw(ctx);
-		this._bDown.draw(ctx);
-	}
-}
-
-class Button{
-
-	constructor(x, y, size){
-		this._x = x - size*0.5;
-		this._y = y - size*0.5;
-		this._size = size;
-	}
-
-	click(e){
-		let cX = e.clientX;
-		let cY = e.clientY;
-		if(cX < this._x) return false;
-		if(this._x + this._size < cX) return false;
-		if(cY < this._y) return false;
-		if(this._y + this._size < cY) return false;
-		return true;
-	}
-
-	draw(ctx){
-		ctx.fillStyle = "#cccccc";
-		ctx.fillRect(this._x, this._y, this._size, this._size);
-	}
-}

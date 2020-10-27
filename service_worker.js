@@ -1,7 +1,7 @@
 //==========
 // ServiceWorker
 
-const CACHE_VERSION = "cache_0.2.8";
+const CACHE_VERSION = "cache_0.2.9";
 const CACHE_FILES = [
 	"./index.html",
 	"./css/custom.css",
@@ -9,6 +9,8 @@ const CACHE_FILES = [
 	"./js/utility.js",
 	"./libs/jquery/jquery.js",
 	"./libs/jquery/jquery.min.js",
+	"./libs/hammer/hammer.js",
+	"./libs/hammer/hammer.min.js",
 	"./images/icons/favicon.ico",
 	"./images/icons/icon152x152.png",
 	"./images/icons/icon192x192.png",

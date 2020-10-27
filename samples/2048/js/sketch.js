@@ -7,29 +7,14 @@ const F_COLOR = ["#CCCCCC", "#333333", "#333333", "#333333", "#333333"];
 
 const T_GRIDS  = 4;
 
-let tMng, hm;
 let tilePadding, tileSize, tileCorner, tiles;
 let fontSize, sX, sY;
 let lockFlg;
+let tMng, hm;
 
 function setup(){
 	createCanvas(windowWidth, windowHeight);
 	frameRate(32);
-
-	// 2048
-	tMng = new TzfeManager();
-	tMng.randomPut();
-	tMng.randomPut();
-	tMng.consoleBoard();
-
-	// Hammer
-	let options = {preventDefault: true};
-	hm = new Hammer(document.body, options);
-	hm.get("pan").set({direction: Hammer.DIRECTION_ALL});
-	hm.on("panleft", actionLeft);
-	hm.on("panright", actionRight);
-	hm.on("panup", actionUp);
-	hm.on("pandown", actionDown);
 
 	if(width < height){
 		tilePadding = width / 5;
@@ -45,6 +30,34 @@ function setup(){
 	sX = width / 2 - tilePadding * T_GRIDS / 2;
 	sY = height / 2 - tilePadding * T_GRIDS / 2;
 	lockFlg = false;
+
+	// 2048
+	tMng = new TzfeManager();
+	tMng.randomPut();
+	tMng.randomPut();
+	tMng.consoleBoard();
+
+	// Hammer
+	let options = {recognizers: [
+		[Hammer.Pan, {direction: Hammer.DIRECTION_ALL, threshold:tileSize*0.5}]
+	]};
+	hm = new Hammer(document.body, options);
+	hm.on("panleft", (e)=>{
+		hm.stop();
+		actionLeft();
+	});
+	hm.on("panright", (e)=>{
+		hm.stop();
+		actionRight();
+	});
+	hm.on("panup", (e)=>{
+		hm.stop();
+		actionUp();
+	});
+	hm.on("pandown", (e)=>{
+		hm.stop();
+		actionDown();
+	});
 
 	// Reflesh
 	this.refleshBoard();
