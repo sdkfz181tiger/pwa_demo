@@ -2,8 +2,12 @@
 //==========
 // JavaScript
 
-const T_COLOR = ["#233D4D", "#FE7F2D", "#FCCA46", "#A1C181", "#619B8A"];
-const F_COLOR = ["#CCCCCC", "#333333", "#333333", "#333333", "#333333"];
+const T_COLOR = [
+	"#FFFFFF", "#F9C74F", "#90BE6D", "#F9844A", "#43AA8B", 
+	"#F8961E", "#4D908E", "#F3722C", "#577590", "#F94144", "#277DA1"];
+const F_COLOR = [
+	"#333333", "#333333", "#333333", "#333333", "#333333",
+	"#333333", "#333333", "#FFFFFF", "#FFFFFF", "#FFFFFF", "#FFFFFF"];
 
 const T_GRIDS  = 4;
 
