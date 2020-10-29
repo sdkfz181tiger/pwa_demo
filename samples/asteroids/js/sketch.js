@@ -9,6 +9,7 @@ let dWidth, dHeight;
 let canvas, ctx;
 
 let ship;
+let bullets;
 
 // Window
 window.addEventListener("load", (e)=>{
@@ -34,8 +35,9 @@ function init(){
 	// Neon
 	ctx.globalCompositeOperation = "lighter";
 
-	// Ship
-	ship = new Ship(ctx, dWidth*0.5, dHeight*0.5, 20);
+	// Ship, Bullets
+	ship = new Ship(ctx, dWidth*0.5, dHeight*0.5, 15);
+	bullets = [];
 
 	//neonRect(125, 125, 50, 50, 13, 213, 252);
 
@@ -43,24 +45,42 @@ function init(){
 }
 
 function update(){
-	// Clear
-	ctx.clearRect(0, 0, dWidth, dHeight);
+	ctx.clearRect(0, 0, dWidth, dHeight);// Clear
 
+	if(ship.x < 0) ship.x = dWidth;
+	if(ship.y < 0) ship.y = dHeight;
+	if(dWidth < ship.x) ship.x = 0;
+	if(dHeight < ship.y) ship.y = 0;
 	ship.draw();
+
+	for(let i=bullets.length-1; 0<=i; i--){
+		let bullet = bullets[i];
+		if(bullet.x < 0) bullets.splice(i, 1);
+		if(bullet.y < 0) bullets.splice(i, 1);
+		if(dWidth < bullet.x) bullets.splice(i, 1);
+		if(dHeight < bullet.y) bullets.splice(i, 1);
+		bullet.draw();
+	}
+
 	setTimeout(update, 50);
 }
 
 // Keyboard
 document.addEventListener("keydown", (e)=>{
 	let key = e.keyCode;
-	// Left
 	if(key == 37) ship.turnLeft();
-	// Right
 	if(key == 39) ship.turnRight();
-	// Down
-	if(key == 40) ship.shot();
-	// Up
-	if(key == 38) ship.thrust(20);
+	if(key == 38) ship.thrust(10);
+	if(key == 90){
+		let bullet = new Bullet(ctx, ship.x, ship.y, 5, ship.deg, 14);
+		bullets.push(bullet);
+	}
+});
+
+document.addEventListener("keyup", (e)=>{
+	let key = e.keyCode;
+	if(key == 37) ship.turnStop();
+	if(key == 39) ship.turnStop();
 });
 
 function neonRect(x, y, w, h, r, g, b){
