@@ -10,6 +10,7 @@ let canvas, ctx;
 
 let ship;
 let bullets;
+let asteroids;
 
 // Window
 window.addEventListener("load", (e)=>{
@@ -35,13 +36,21 @@ function init(){
 	// Neon
 	ctx.globalCompositeOperation = "lighter";
 
-	// Ship, Bullets
+	// Ship, Bullets, Asteroids
 	ship = new Ship(ctx, dWidth*0.5, dHeight*0.5, 15);
 	bullets = [];
+	asteroids = [];
 
 	//neonRect(125, 125, 50, 50, 13, 213, 252);
 
+	meteo();
 	update();
+}
+
+function meteo(){
+	let r = 30 + 20 * Math.random();
+	asteroids.push(new Asteroid(ctx, 0, 0, r));
+	setTimeout(meteo, 3000);
 }
 
 function update(){
@@ -60,6 +69,15 @@ function update(){
 		if(dWidth < bullet.x) bullets.splice(i, 1);
 		if(dHeight < bullet.y) bullets.splice(i, 1);
 		bullet.draw();
+	}
+
+	for(let i=asteroids.length-1; 0<=i; i--){
+		let asteroid = asteroids[i];
+		if(asteroid.x < 0) asteroid.x = dWidth;
+		if(asteroid.y < 0) asteroid.y = dHeight;
+		if(dWidth < asteroid.x) asteroid.x = 0;
+		if(dHeight < asteroid.y) asteroid.y = 0;
+		asteroid.draw();
 	}
 
 	setTimeout(update, 50);

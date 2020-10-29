@@ -87,6 +87,60 @@ class Ship{
 	}
 }
 
+//==========
+// Asteroid
+
+class Asteroid{
+
+	constructor(ctx, x, y, r){
+		this._ctx = ctx;
+		this._x   = x;
+		this._y   = y;
+		this._r   = r;
+		this._rot = 0;
+
+		let spd = 1 + Math.random() * 3;
+		let deg = Math.floor(Math.random() * 360);
+		this._vX = spd * TBL_COS[deg];
+		this._vY = spd * TBL_SIN[deg];
+
+		this._rads = [];
+		for(let i=0; i<6; i++){
+			let rdm = 0.7+Math.random()*0.3;
+			this._rads.push(this._r*rdm);
+		}
+	}
+
+	get x(){return this._x;}
+	get y(){return this._y;}
+	set x(n){this._x = n;}
+	set y(n){this._y = n;}
+
+	draw(){
+		this._x += this._vX;
+		this._y += this._vY;
+
+		this._rot += 1;
+		if(360 <= this._rot) this._rot -= 360;
+		let pD = Math.floor(360/this._rads.length);
+		let aX = this._x + this._rads[0]*TBL_COS[this._rot];
+		let aY = this._y + this._rads[0]*TBL_SIN[this._rot];
+		this._ctx.beginPath();
+		this._ctx.moveTo(aX, aY);
+		for(let i=1; i<this._rads.length; i++){
+			let bD = Math.floor(this._rot + pD*i) % 360;
+			let bX = this._x + this._rads[i]*TBL_COS[bD];
+			let bY = this._y + this._rads[i]*TBL_SIN[bD];
+			this._ctx.lineTo(bX, bY);
+		}
+		this._ctx.closePath();
+		this._ctx.stroke();
+	}
+}
+
+//==========
+// Bullet
+
 class Bullet{
 
 	constructor(ctx, x, y, r, deg, spd){
@@ -97,7 +151,7 @@ class Bullet{
 		this._deg = Math.floor(deg);
 		this._spd = Math.floor(spd);
 	}
-	
+
 	get x(){return this._x;}
 	get y(){return this._y;}
 
