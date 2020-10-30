@@ -113,6 +113,7 @@ class Asteroid{
 
 	get x(){return this._x;}
 	get y(){return this._y;}
+	get r(){return this._r;}
 	set x(n){this._x = n;}
 	set y(n){this._y = n;}
 
@@ -135,6 +136,20 @@ class Asteroid{
 		}
 		this._ctx.closePath();
 		this._ctx.stroke();
+	}
+
+	contains(x, y){
+		let pD = Math.floor(360/this._rads.length);
+		for(let i=0; i<this._rads.length-1; i++){
+			let aD = Math.floor(this._rot + pD*i) % 360;
+			let bD = Math.floor(this._rot + pD*(i+1)) % 360;
+			let aX = this._x + this._rads[i]*TBL_COS[aD];
+			let aY = this._y + this._rads[i]*TBL_SIN[aD];
+			let bX = this._x + this._rads[i+1]*TBL_COS[bD];
+			let bY = this._y + this._rads[i+1]*TBL_SIN[bD];
+			if(!isRight(aX, aY, bX, bY, x, y)) return false;
+		}
+		return true;
 	}
 }
 
@@ -166,3 +181,22 @@ class Bullet{
 		this._ctx.stroke();
 	}
 }
+
+//==========
+// Vector
+
+function isRight(fromX, fromY, toX, toY, pX, pY){
+	let c = {x:fromX, y:fromY};
+	let v = {x:toX-fromX, y:toY-fromY};
+	let u = calcVerticalR(v);
+	let p = {x:pX-fromX, y:pY-fromY};
+	let dot = calcDot(u, p);
+	let cos = dot / (calcLength(u) * calcLength(p));
+	if(0 < cos) return true;
+	return false;
+}
+
+function calcVerticalL(v){return {x:v.y, y:v.x*-1.0};}
+function calcVerticalR(v){return {x:v.y*-1.0, y:v.x};}
+function calcDot(v1, v2){return v1.x*v2.x+v1.y*v2.y;}
+function calcLength(v){return Math.sqrt(v.x*v.x+v.y*v.y);}

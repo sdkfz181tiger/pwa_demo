@@ -2,8 +2,11 @@
 //==========
 // JavaScript
 
-const ROWS = 15;
-const COLS = 10;
+const MAX_BULLETS   = 10;
+const MAX_ASTEROIDS = 20;
+const AST_MIN       = 30;
+const AST_BUF       = 20;
+const AST_SIZE = AST_MIN + AST_BUF;
 
 let dWidth, dHeight;
 let canvas, ctx;
@@ -48,9 +51,17 @@ function init(){
 }
 
 function meteo(){
-	let r = 30 + 20 * Math.random();
-	asteroids.push(new Asteroid(ctx, 0, 0, r));
-	setTimeout(meteo, 3000);
+	if(asteroids.length < MAX_ASTEROIDS){
+		let r = AST_MIN + AST_BUF * Math.random();
+		asteroids.push(new Asteroid(ctx, -50, -50, r));
+	}
+	setTimeout(meteo, 2000);
+}
+
+function splitAsteroid(x, y, r){
+	if(r < AST_SIZE*0.4) return;
+	asteroids.push(new Asteroid(ctx, x, y, r*0.8));
+	asteroids.push(new Asteroid(ctx, x, y, r*0.8));
 }
 
 function update(){
@@ -71,13 +82,26 @@ function update(){
 		bullet.draw();
 	}
 
-	for(let i=asteroids.length-1; 0<=i; i--){
-		let asteroid = asteroids[i];
-		if(asteroid.x < 0) asteroid.x = dWidth;
-		if(asteroid.y < 0) asteroid.y = dHeight;
-		if(dWidth < asteroid.x) asteroid.x = 0;
-		if(dHeight < asteroid.y) asteroid.y = 0;
+	for(let a=asteroids.length-1; 0<=a; a--){
+		let asteroid = asteroids[a];
+		if(asteroid.x < -50) asteroid.x = dWidth;
+		if(asteroid.y < -50) asteroid.y = dHeight;
+		if(dWidth+50 < asteroid.x) asteroid.x = 0;
+		if(dHeight+50 < asteroid.y) asteroid.y = 0;
 		asteroid.draw();
+		// Asteroid x Bullet
+		for(let b=bullets.length-1; 0<=b; b--){
+			let bullet = bullets[b];
+			if(bullet.x < asteroid.x-AST_SIZE) continue;
+			if(bullet.y < asteroid.y-AST_SIZE) continue;
+			if(asteroid.x+AST_SIZE < bullet.x) continue;
+			if(asteroid.y+AST_SIZE < bullet.y) continue;
+			if(asteroid.contains(bullet.x, bullet.y)){
+				splitAsteroid(asteroid.x, asteroid.y, asteroid.r);
+				bullets.splice(b, 1);  // Remove
+				asteroids.splice(a, 1);// Remove
+			}
+		}
 	}
 
 	setTimeout(update, 50);
@@ -89,7 +113,7 @@ document.addEventListener("keydown", (e)=>{
 	if(key == 37) ship.turnLeft();
 	if(key == 39) ship.turnRight();
 	if(key == 38) ship.thrust(10);
-	if(key == 90){
+	if(key == 90 && bullets.length < MAX_BULLETS){
 		let bullet = new Bullet(ctx, ship.x, ship.y, 5, ship.deg, 14);
 		bullets.push(bullet);
 	}
