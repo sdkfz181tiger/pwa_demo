@@ -2,18 +2,16 @@
 //==========
 // JavaScript
 
-const MAX_BULLETS   = 10;
-const MAX_ASTEROIDS = 20;
+const MAX_BULLETS   = 5;
+const MAX_ASTEROIDS = 10;
 const AST_MIN       = 30;
 const AST_BUF       = 20;
 const AST_SIZE = AST_MIN + AST_BUF;
 
 let dWidth, dHeight;
-let canvas, ctx;
+let canvas, ctx, hm;
 
-let ship;
-let bullets;
-let asteroids;
+let ship, bullets, asteroids;
 
 // Window
 window.addEventListener("load", (e)=>{
@@ -36,26 +34,48 @@ function init(){
 	ctx.textAlign   = "center";
 	ctx.strokeStyle = "#ffffff";
 	ctx.lineWidth   = 2;
-	// Neon
-	ctx.globalCompositeOperation = "lighter";
+
+	// Hammer
+	let options = {recognizers: [
+		[Hammer.Pan, {direction: Hammer.DIRECTION_ALL, threshold:30}]
+	]};
+	hm = new Hammer(document.body, options);
+	hm.on("panleft", (e)=>{
+		console.log("Left!!");
+	});
+	hm.on("panright", (e)=>{
+		console.log("Right!!");
+	});
+	hm.on("panup", (e)=>{
+		console.log("Up!!");
+	});
+	hm.on("pandown", (e)=>{
+		console.log("Down!!");
+	});
 
 	// Ship, Bullets, Asteroids
 	ship = new Ship(ctx, dWidth*0.5, dHeight*0.5, 15);
 	bullets = [];
 	asteroids = [];
 
-	//neonRect(125, 125, 50, 50, 13, 213, 252);
-
-	meteo();
+	autoBullet();
+	autoAsteroid();
 	update();
 }
 
-function meteo(){
+function autoBullet(){
+	if(bullets.length < MAX_BULLETS){
+		bullets.push(new Bullet(ctx, ship.x, ship.y, 5, ship.deg, 14));
+	}
+	setTimeout(autoBullet, 1000);
+}
+
+function autoAsteroid(){
 	if(asteroids.length < MAX_ASTEROIDS){
 		let r = AST_MIN + AST_BUF * Math.random();
 		asteroids.push(new Asteroid(ctx, -50, -50, r));
 	}
-	setTimeout(meteo, 2000);
+	setTimeout(autoAsteroid, 2000);
 }
 
 function splitAsteroid(x, y, r){
@@ -66,6 +86,10 @@ function splitAsteroid(x, y, r){
 
 function update(){
 	ctx.clearRect(0, 0, dWidth, dHeight);// Clear
+
+	// Neon
+	//ctx.globalCompositeOperation = "lighter";
+	//neonRect(125, 125, 50, 50, 13, 213, 252);
 
 	if(ship.x < 0) ship.x = dWidth;
 	if(ship.y < 0) ship.y = dHeight;
@@ -113,10 +137,6 @@ document.addEventListener("keydown", (e)=>{
 	if(key == 37) ship.turnLeft();
 	if(key == 39) ship.turnRight();
 	if(key == 38) ship.thrust(10);
-	if(key == 90 && bullets.length < MAX_BULLETS){
-		let bullet = new Bullet(ctx, ship.x, ship.y, 5, ship.deg, 14);
-		bullets.push(bullet);
-	}
 });
 
 document.addEventListener("keyup", (e)=>{
