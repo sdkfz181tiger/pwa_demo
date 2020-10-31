@@ -37,7 +37,7 @@ function init(){
 
 	// Hammer
 	let options = {recognizers: [
-		[Hammer.Pan, {direction: Hammer.DIRECTION_VERTICAL, threshold:20}]
+		[Hammer.Pan, {direction: Hammer.DIRECTION_ALL, threshold:20}]
 	]};
 	hm = new Hammer(document.body, options);
 	hm.on("panleft panright panup pandown", (e)=>{
