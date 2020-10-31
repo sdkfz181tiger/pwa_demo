@@ -46,21 +46,12 @@ function setup(){
 		[Hammer.Pan, {direction: Hammer.DIRECTION_ALL, threshold:tileSize*0.5}]
 	]};
 	hm = new Hammer(document.body, options);
-	hm.on("panleft", (e)=>{
-		hm.stop();
-		actionLeft();
-	});
-	hm.on("panright", (e)=>{
-		hm.stop();
-		actionRight();
-	});
-	hm.on("panup", (e)=>{
-		hm.stop();
-		actionUp();
-	});
-	hm.on("pandown", (e)=>{
-		hm.stop();
-		actionDown();
+	hm.on("panleft panright panup pandown", (e)=>{
+		if(e.type == "panleft")  actionLeft();
+		if(e.type == "panright") actionRight();
+		if(e.type == "panup")    actionUp();
+		if(e.type == "pandown")  actionDown();
+		hm.stop();// Stop
 	});
 
 	// Reflesh

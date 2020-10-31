@@ -37,20 +37,15 @@ function init(){
 
 	// Hammer
 	let options = {recognizers: [
-		[Hammer.Pan, {direction: Hammer.DIRECTION_ALL, threshold:30}]
+		[Hammer.Pan, {direction: Hammer.DIRECTION_VERTICAL, threshold:20}]
 	]};
 	hm = new Hammer(document.body, options);
-	hm.on("panleft", (e)=>{
-		console.log("Left!!");
-	});
-	hm.on("panright", (e)=>{
-		console.log("Right!!");
-	});
-	hm.on("panup", (e)=>{
-		console.log("Up!!");
-	});
-	hm.on("pandown", (e)=>{
-		console.log("Down!!");
+	hm.on("panleft panright panup pandown", (e)=>{
+		if(e.type == "panleft")  ship.turnLeft();
+		if(e.type == "panright") ship.turnRight();
+		if(e.type == "panup")    ship.thrust(10);
+		if(e.type == "pandown")  ship.break(10);
+		hm.stop();// Stop
 	});
 
 	// Ship, Bullets, Asteroids
@@ -134,9 +129,11 @@ function update(){
 // Keyboard
 document.addEventListener("keydown", (e)=>{
 	let key = e.keyCode;
+	console.log(key);
 	if(key == 37) ship.turnLeft();
 	if(key == 39) ship.turnRight();
 	if(key == 38) ship.thrust(10);
+	if(key == 40) ship.break();
 });
 
 document.addEventListener("keyup", (e)=>{

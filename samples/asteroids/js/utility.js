@@ -44,10 +44,14 @@ class Ship{
 		this._spd = Math.floor(spd);
 	}
 
-	turnLeft(){this._trn = -10;}
-	turnRight(){this._trn = 10;}
+	turnLeft(){this._trn = -2;}
+	turnRight(){this._trn = 2;}
 	turnStop(){this._trn = 0;}
 	thrust(spd){this._spd = spd;}
+	break(){
+		this._trn = 0;
+		this._spd = 0;
+	}
 
 	draw(){
 		// Speed

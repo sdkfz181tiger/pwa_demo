@@ -26,6 +26,13 @@ body{
 	top: 0px; left: 0px;
 }
 
+#howto_area{
+	margin: 10px; padding: 5px;
+	width: auto; height: auto;
+	position: absolute; list-style: none;
+	bottom: 0px; right: 0px;
+}
+
 li{
 	margin: 0px; padding: 2px;
 }
