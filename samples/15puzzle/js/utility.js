@@ -13,8 +13,8 @@ function showMsg(msg){
 class FpzManager{
 
 	constructor(){
-		this._grids = 4;
-		this._board = [
+		this._grids  = 4;
+		this._board  = [
 			[0, 0, 0, 0],
 			[0, 0, 0, 0],
 			[0, 0, 0, 0],
