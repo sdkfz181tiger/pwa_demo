@@ -21,9 +21,10 @@ body{
 
 #msg_area{
 	margin: 10px; padding: 5px;
-	width: auto; height: auto;
+	width: auto; height: 200px;
 	position: absolute; list-style: none;
 	top: 0px; left: 0px;
+	overflow: hidden;
 }
 
 #howto_area{
