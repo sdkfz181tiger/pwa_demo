@@ -21,6 +21,7 @@ window.addEventListener("load", (e)=>{
 		glcanvas = fx.canvas();
 	}catch(e){
 		console.log(e);
+		showMsg(e);
 		return;
 	}
 	init();
