@@ -3,84 +3,115 @@
 // JavaScript
 
 const T_COLOR = [
-	"#FFFFFF", "#F9C74F", "#90BE6D", "#F9844A", "#43AA8B", 
-	"#F8961E", "#4D908E", "#F3722C", "#577590", "#F94144", "#277DA1"];
+	"#ffffff", "#f44336", "#e91e63", "#9c27b0", "#673ab7", "#3f51b5", 
+	"#2196f3", "#03a9f4", "#00bcd4", "#009688", "#4caf50", "#8bc34a", 
+	"#cddc39", "#ffeb3b", "#ffc107", "#ff9800", "#ff5722", "#795548"];
 const F_COLOR = [
-	"#333333", "#333333", "#333333", "#333333", "#333333",
-	"#333333", "#333333", "#FFFFFF", "#FFFFFF", "#FFFFFF", "#FFFFFF"];
+	"#333", "#fff", "#fff", "#fff", "#fff", "#fff", 
+	"#333", "#333", "#333", "#fff", "#fff", "#fff", 
+	"#333", "#333", "#333", "#333", "#fff", "#fff"];
 
-const T_GRIDS  = 4;
-
-let tilePadding, tileSize, tileCorner, tiles;
-let fontSize, sX, sY;
-let lockFlg;
-let fMng, hm;
+let fMng;
+let tPadding, tSize, tCorner, tGrids;
+let fontSize, sX, sY, tiles;
 
 function setup(){
 	createCanvas(windowWidth, windowHeight);
 	frameRate(32);
-
-	if(width < height){
-		tilePadding = width / 5;
-		tileSize = tilePadding * 0.95;
-	}else{
-		tilePadding = height / 5;
-		tileSize = tilePadding * 0.95;
-	}
-
-	tileCorner = tileSize * 0.1;
-	fontSize = tileSize * 0.5;
-
-	sX = width / 2 - tilePadding * T_GRIDS / 2;
-	sY = height / 2 - tilePadding * T_GRIDS / 2;
-	lockFlg = false;
+	showMsg("setup");
 
 	// 15Puzzle
 	fMng = new FpzManager();
 	fMng.consoleBoard();
 
-	// Hammer
-	let options = {recognizers: [
-		[Hammer.Pan, {direction: Hammer.DIRECTION_ALL, threshold:tileSize*0.5}]
-	]};
-	hm = new Hammer(document.body, options);
-	hm.on("panleft panright panup pandown", (e)=>{
-		// if(e.type == "panleft")  actionLeft();
-		// if(e.type == "panright") actionRight();
-		// if(e.type == "panup")    actionUp();
-		// if(e.type == "pandown")  actionDown();
-		hm.stop();// Stop
-	});
+	if(width < height){
+		tPadding = width / 5;
+		tSize = tPadding * 0.95;
+	}else{
+		tPadding = height / 5;
+		tSize = tPadding * 0.95;
+	}
+
+	tCorner = tSize * 0.1;
+	tGrids  = fMng.getGrids();
+	fontSize = tSize * 0.5;
+
+	sX = width / 2 - tPadding * tGrids / 2;
+	sY = height / 2 - tPadding * tGrids / 2;
+
+	// Tiles
+	tiles = [];
+	let board = fMng.getBoard();
+	for(let r=0; r<tGrids; r++){
+		for(let c=0; c<tGrids; c++){
+			tiles.push(new Tile(board[r][c], r, c));
+		}
+	}
 }
 
 function draw(){
 	background(0, 0, 0);
 	noStroke(); fill(33, 33, 33);
-	square(sX, sY, tilePadding*T_GRIDS, tilePadding*T_GRIDS, tileCorner);
-	for(let r=0; r<T_GRIDS; r++){
-		for(let c=0; c<T_GRIDS; c++){
-			//if(tiles[r][c]) tiles[r][c].draw();
+	square(sX, sY, tPadding*tGrids, tPadding*tGrids, tCorner);
+	for(let tile of tiles) tile.draw();
+}
+
+function mousePressed(){
+	for(let tile of tiles){
+		if(tile.contains(mouseX, mouseY)){
+			let target = fMng.checkVH(tile.r, tile.c);
+			if(target.r < 0 || target.c < 0) return;
+			swapTiles(tile.r, tile.c, target.r, target.c);
+			return;
 		}
 	}
 }
 
+function swapTiles(fR, fC, tR, tC){
+	let f = fR * fMng.getGrids() + fC;
+	let t = tR * fMng.getGrids() + tC;
+	tiles[f].change(tR, tC);
+	tiles[t].change(fR, fC);
+	let tmp = tiles[t];
+	tiles[t] = tiles[f];
+	tiles[f] = tmp;
+	showMsg("Swap:" + tiles[t].num);
+	fMng.consoleBoard();
+}
+
 class Tile{
 
-	constructor(n, x, y){
-		this._n = n;
-		this._x = x;
-		this._y = y;
-		this._dX = x;
-		this._dY = y;
+	constructor(num, r, c){
+		this._num = num;
+		this._r   = r;
+		this._c   = c;
+		this._x   = sX + tPadding * c;
+		this._y   = sY + tPadding * r;
+		this._dX  = this._x;
+		this._dY  = this._y;
 	}
 
-	setNum(n){
-		this._n = n;
+	get num(){return this._num;}
+	get r(){return this._r;}
+	get c(){return this._c;}
+
+	set num(n){this._num = n;}
+	set r(n){this._r = r;}
+	set c(n){this._c = c;}
+
+	change(r, c){
+		this._r = r;
+		this._c = c;
+		this._dX = sX + tPadding * c;
+		this._dY = sY + tPadding * r;
 	}
 
-	moveTo(gR, gC){
-		this._dX = this._x + gC * tilePadding;
-		this._dY = this._y + gR * tilePadding;
+	contains(x, y){
+		if(x < this._x) return false;
+		if(y < this._y) return false;
+		if(this._x + tSize < x) return false;
+		if(this._y + tSize < y) return false;
+		return true;
 	}
 
 	draw(){
@@ -92,14 +123,14 @@ class Tile{
 			this._x += (this._dX - this._x) / 2;
 			this._y += (this._dY - this._y) / 2;
 		}
-		if(this._n == 0) return;
-		let i = Math.log2(this._n)%T_COLOR.length;
+		if(this._num == 0) return;
+		let i = Math.floor(this._num%T_COLOR.length);
 		// Background
 		noStroke(); fill(T_COLOR[i]);
-		square(this._x, this._y, tileSize, tileSize, tileCorner);
+		square(this._x, this._y, tSize, tSize, tCorner);
 		// Font
 		fill(F_COLOR[i]); textSize(fontSize); textAlign(CENTER);
-		text(this._n, this._x+tileSize/2, this._y+tileSize-fontSize*0.6);
+		text(this._num, this._x+tSize/2, this._y+tSize-fontSize*0.6);
 	}
 
 	calcDistance(){
