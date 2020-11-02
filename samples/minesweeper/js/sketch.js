@@ -2,6 +2,8 @@
 //==========
 // JavaScript
 
+const PALLETE = ["#386641", "#6A994E", "#A7C957", "#F2E8CF", "#BC4749"];
+
 const ROWS = 10;
 const COLS = 10;
 
@@ -45,7 +47,7 @@ function show(){
 	ctx.fillStyle = "#000000";
 	ctx.fillRect(0, 0, dWidth, dHeight);
 
-	ctx.fillStyle = "#333333";
+	ctx.fillStyle = "#6A994E";
 	ctx.fillRect(oX, oY, COLS*pSize-1, ROWS*pSize-1);
 
 	for(let r=0; r<ROWS; r++){
@@ -55,24 +57,24 @@ function show(){
 
 			let cell = mMng.getCell(r, c);
 			if(cell == -1){
-				ctx.fillStyle = "#666666";
+				ctx.fillStyle = "#F2E8CF";
 				ctx.fillRect(x, y, tSize, tSize);
 				continue;
 			}
 			if(cell == 0){
-				ctx.fillStyle = "#339944";
+				ctx.fillStyle = "#A7C957";
 				ctx.fillRect(x, y, tSize, tSize);
 				continue;
 			}
 			if(0 < cell && cell < 9){
-				ctx.fillStyle = "#338888";
+				ctx.fillStyle = "#386641";
 				ctx.fillRect(x, y, tSize, tSize);
 				ctx.fillStyle = "#ffffff";
 				ctx.fillText(cell, x+tSize/2, y+tSize*0.9, tSize);
 				continue;
 			}
 			if(cell == 9){
-				ctx.fillStyle = "#993333";
+				ctx.fillStyle = "#BC4749";
 				ctx.fillRect(x, y, tSize, tSize);
 				ctx.fillStyle = "#ffffff";
 				ctx.fillText("X", x+tSize/2, y+tSize*0.9, tSize);
