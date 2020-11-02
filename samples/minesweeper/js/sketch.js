@@ -2,7 +2,7 @@
 //==========
 // JavaScript
 
-const ROWS = 15;
+const ROWS = 10;
 const COLS = 10;
 
 let dWidth, dHeight;

@@ -1,4 +1,11 @@
 "use strict";
+//==========
+// Show message
+function showMsg(msg){
+	console.log(msg);
+	let li = $("<li>").text(msg);
+	$("#msg_area").prepend(li);
+}
 
 const DEG_TO_RAD = Math.PI / 180;
 const RAD_TO_DEG = 180 / Math.PI;
@@ -8,13 +15,6 @@ let TBL_SIN = [];
 for(let i=0; i<360; i++){
 	TBL_SIN.push(Math.sin(i*DEG_TO_RAD));
 	TBL_COS.push(Math.cos(i*DEG_TO_RAD));
-}
-
-// Show message
-function showMsg(msg){
-	console.log(msg);
-	let li = $("<li>").text(msg);
-	$("#msg_area").prepend(li);
 }
 
 //==========

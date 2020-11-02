@@ -1,5 +1,5 @@
 "use strict";
-
+//==========
 // Show message
 function showMsg(msg){
 	console.log(msg);
