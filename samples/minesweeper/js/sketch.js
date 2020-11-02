@@ -2,8 +2,6 @@
 //==========
 // JavaScript
 
-const PALLETE = ["#386641", "#6A994E", "#A7C957", "#F2E8CF", "#BC4749"];
-
 const ROWS = 10;
 const COLS = 10;
 
@@ -47,7 +45,7 @@ function show(){
 	ctx.fillStyle = "#000000";
 	ctx.fillRect(0, 0, dWidth, dHeight);
 
-	ctx.fillStyle = "#6A994E";
+	ctx.fillStyle = "#F2E8CF";
 	ctx.fillRect(oX, oY, COLS*pSize-1, ROWS*pSize-1);
 
 	for(let r=0; r<ROWS; r++){
@@ -57,7 +55,7 @@ function show(){
 
 			let cell = mMng.getCell(r, c);
 			if(cell == -1){
-				ctx.fillStyle = "#F2E8CF";
+				ctx.fillStyle = "#6A994E";
 				ctx.fillRect(x, y, tSize, tSize);
 				continue;
 			}
