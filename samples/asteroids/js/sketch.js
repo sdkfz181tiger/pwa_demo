@@ -9,7 +9,7 @@ const AST_BUF       = 20;
 const AST_SIZE = AST_MIN + AST_BUF;
 
 let dWidth, dHeight;
-let canvas, ctx, hm;
+let canvas, ctx, hm, sLine;
 
 let ship, bullets, asteroids;
 
@@ -47,6 +47,10 @@ function init(){
 		if(e.type == "pandown")  ship.break(10);
 		hm.stop();// Stop
 	});
+
+	// Scanline
+	sLine = new Scanline(canvas, ctx, dWidth, dHeight);
+	sLine.init("../../images/scanline.png");
 
 	// Ship, Bullets, Asteroids
 	ship = new Ship(ctx, dWidth*0.5, dHeight*0.5, 15);
@@ -123,13 +127,14 @@ function update(){
 		}
 	}
 
+	sLine.draw();// Scanline
+
 	setTimeout(update, 50);
 }
 
 // Keyboard
 document.addEventListener("keydown", (e)=>{
 	let key = e.keyCode;
-	console.log(key);
 	if(key == 37) ship.turnLeft();
 	if(key == 39) ship.turnRight();
 	if(key == 38) ship.thrust(10);

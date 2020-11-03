@@ -89,6 +89,10 @@ class MineSweeperManager{
 	}
 
 	search(r, c){
+		if(r < 0) return false;
+		if(c < 0) return false;
+		if(ROWS-1 < r) return false;
+		if(COLS-1 < c) return false;
 		if(this._tblMine[r][c] == 1){
 			this._tblSearch[r][c] = 1;// Open
 			return true;

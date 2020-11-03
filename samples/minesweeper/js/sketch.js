@@ -7,23 +7,12 @@ const COLS = 10;
 
 let dWidth, dHeight;
 let pSize, tSize, fSize;
-let canvas, ctx, oX, oY, mMng;
-
-let lines = new Image();
-lines.src = "./images/scanline.png";
-let glcanvas, texture, hw, hh, w75;
+let canvas, ctx, oX, oY;
+let mMng, sLine;
 
 // Window
 window.addEventListener("load", (e)=>{
 	showMsg("onload");
-
-	try{
-		glcanvas = fx.canvas();
-	}catch(e){
-		console.log(e);
-		showMsg(e);
-		return;
-	}
 	init();
 });
 
@@ -33,7 +22,7 @@ function init(){
 	dWidth = document.body.clientWidth;
 	dHeight = document.body.clientHeight;
 	// Tile and Font size
-	pSize = dHeight / (ROWS+2);
+	pSize = dWidth / (ROWS+2);
 	tSize = pSize * 0.9;
 	fSize = tSize * 0.9;
 	// Canvas
@@ -50,37 +39,15 @@ function init(){
 	oY = Math.floor(dHeight / 2 - ROWS * pSize / 2);
 	// MineSweeperManager
 	mMng = new MineSweeperManager(ROWS, COLS, 8);
-	
-	// Test
-	texture = glcanvas.texture(canvas);
-	hw = dWidth / 2;
-	hh = dHeight / 2;
-	w75 = dWidth * 0.75;
-
-	canvas.parentNode.insertBefore(glcanvas, canvas);
-	canvas.style.display = "none";
-	glcanvas.className = canvas.className;
-	glcanvas.id = canvas.id;
-	canvas.id = "old_" + canvas.id;
-
-	setTimeout(update, 500);
-}
-
-function update(){
+	// Scanline
+	sLine = new Scanline(canvas, ctx, dWidth, dHeight);
+	sLine.init("../../images/scanline.png");
 	show();// Show
-
-	ctx.drawImage(lines, 0, 0, dWidth, dHeight);
-	texture.loadContentsOf(canvas);
-	glcanvas.draw(texture)
-		.bulgePinch(hw, hh, w75, 0.2)
-		.vignette(0.25, 0.75)
-		.update();
-	setTimeout(update, 500);
 }
 
 function show(){
 	// Background
-	ctx.fillStyle = "#cccccc";
+	ctx.fillStyle = "#000000";
 	ctx.fillRect(0, 0, dWidth, dHeight);
 
 	ctx.fillStyle = "#F2E8CF";
@@ -118,7 +85,8 @@ function show(){
 			}
 		}
 	}
-	//mMng.consoleAll();
+	sLine.draw();// Scanline
+	mMng.consoleAll();
 }
 
 // Keyboard
@@ -127,6 +95,7 @@ document.addEventListener("click", (e)=>{
 	let c = Math.floor((e.x - oX) / pSize);
 	if(mMng.search(r, c)){
 		console.log("GAME OVER");
+		showMsg("GAME OVER");
 	}
 	show();
 });
