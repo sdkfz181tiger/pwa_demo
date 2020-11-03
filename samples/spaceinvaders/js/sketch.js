@@ -21,13 +21,12 @@ function setup(){
 	let pad = 32;
 	let size = 30;
 	if(width < height){
-		pad = width / 5;
+		pad = width / 10;
 		size = pad * 0.95;
 	}else{
-		pad = height / 5;
+		pad = height / 10;
 		size = pad * 0.95;
 	}
-	let corner = size * 0.1;
 
 	// 15Puzzle
 	fMng = new FpzManager();
@@ -41,7 +40,7 @@ function setup(){
 	let board = fMng.getBoard();
 	for(let r=0; r<fMng.getGrids(); r++){
 		for(let c=0; c<fMng.getGrids(); c++){
-			tiles.push(new Tile(board[r][c], r, c, pad, size, corner));
+			tiles.push(new Tile(board[r][c], r, c, pad, size));
 		}
 	}
 
@@ -82,13 +81,13 @@ function swapTiles(fR, fC, tR, tC){
 
 class Tile{
 
-	constructor(num, r, c, pad, size, corner){
+	constructor(num, r, c, pad, size){
 		this._num    = num;
 		this._r      = r;
 		this._c      = c;
 		this._pad    = pad;
 		this._size   = size;
-		this._corner = corner;
+		this._corner = size*0.1;
 
 		this._x   = sX + pad * c;
 		this._y   = sY + pad * r;

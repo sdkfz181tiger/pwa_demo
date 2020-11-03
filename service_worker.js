@@ -1,7 +1,7 @@
 //==========
 // ServiceWorker
 
-const CACHE_VERSION = "cache_0.4.0";
+const CACHE_VERSION = "cache_0.4.1";
 const CACHE_FILES = [
 	"./index.html",
 	"./css/custom.css",
@@ -18,6 +18,8 @@ const CACHE_FILES = [
 	"./images/icons/icon192x192.png",
 	"./images/icons/icon512x512.png",
 	"./images/logo512x512.png",
+	"./images/crt_body.png",
+	"./images/crt_frame.png",
 	"./images/scanline.png"
 ];
 
