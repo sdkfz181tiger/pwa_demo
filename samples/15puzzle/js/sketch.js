@@ -11,11 +11,11 @@ const F_COLOR = [
 	"#333", "#333", "#333", "#FFF", "#FFF", "#FFF", 
 	"#333", "#333", "#333", "#333", "#FFF", "#FFF"];
 
-let fMng, sX, sY, tiles;
+let fMng, sX, sY, tiles, sLine;
 
 function setup(){
 	createCanvas(windowWidth, windowHeight);
-	frameRate(32);
+	frameRate(16);
 	showMsg("setup");
 
 	let pad = 32;
@@ -44,12 +44,17 @@ function setup(){
 			tiles.push(new Tile(board[r][c], r, c, pad, size, corner));
 		}
 	}
+
+	// Scanline
+	sLine = new Scanline(canvas, drawingContext, width, height);
+	sLine.init("../../images/scanline.png");
 }
 
 function draw(){
 	background(0, 0, 0);
 	noStroke(); fill(33, 33, 33);
 	for(let tile of tiles) tile.draw();
+	sLine.draw();// Scanline
 }
 
 function mousePressed(){

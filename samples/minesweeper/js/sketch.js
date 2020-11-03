@@ -22,7 +22,10 @@ function init(){
 	dWidth = document.body.clientWidth;
 	dHeight = document.body.clientHeight;
 	// Tile and Font size
-	pSize = dWidth / (ROWS+2);
+	pSize = dWidth / (COLS+2);
+	if(dHeight < dWidth){
+		pSize = dHeight / (ROWS+2);
+	}
 	tSize = pSize * 0.9;
 	fSize = tSize * 0.9;
 	// Canvas
@@ -33,7 +36,6 @@ function init(){
 	ctx = canvas.getContext("2d");
 	ctx.font = fSize + "px Arial";
 	ctx.textAlign = "center";
-
 	// Offset
 	oX = Math.floor(dWidth / 2 - COLS * pSize / 2);
 	oY = Math.floor(dHeight / 2 - ROWS * pSize / 2);

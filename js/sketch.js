@@ -3,7 +3,7 @@
 // JavaScript
 
 let dWidth, dHeight;
-let canvas, ctx, sMng;
+let canvas, ctx, sLine;
 
 // Window
 window.addEventListener("load", (e)=>{
@@ -44,4 +44,9 @@ function init(){
 			ctx.drawImage(logo, logoX, logoY, logoW, logoH);
 		}
 	});
+
+	// Scanline
+	sLine = new Scanline(canvas, ctx, dWidth, dHeight);
+	sLine.init("./images/scanline.png");
+	setTimeout(()=>{sLine.draw();}, 250);
 }
