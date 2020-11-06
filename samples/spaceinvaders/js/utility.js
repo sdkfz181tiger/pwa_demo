@@ -10,87 +10,63 @@ function showMsg(msg){
 //==========
 // FpzManager
 
-class FpzManager{
+const DEG_TO_RAD = Math.PI / 180;
+const RAD_TO_DEG = 180 / Math.PI;
 
-	constructor(){
-		this._grids  = 4;
-		this._board  = [
-			[0, 0, 0, 0],
-			[0, 0, 0, 0],
-			[0, 0, 0, 0],
-			[0, 0, 0, 0]
-		];
-		this.resetBoard();
-	}
+let seed = "";
+for(let i=0; i<40; i++) seed += "1";
+const MAX = parseInt(seed, 2);
+const INV_ROWS = 1;
+const INV_COLS = 1;
+const INV_PAD  = 32;
 
-	resetBoard(){
-		let nums = [];
-		for(let i=0; i<this._grids**2; i++) nums.push(i);
-		for(let i=nums.length-1; 0<i; i--){
-			let rdm = Math.floor(Math.random()*i);
-			let tmp = nums[rdm];
-			nums[rdm] = nums[i];
-			nums[i] = tmp;
+const COLORS = [
+	"#FFFFFF", "#F44336", "#E91E63", "#9C27B0", "#673Ab7", "#3F51B5", 
+	"#2196F3", "#03A9f4", "#00BCD4", "#009688", "#4CAF50", "#8BC34A", 
+	"#CDDC39", "#FFEB3B", "#FFC107", "#FF9800", "#FF5722", "#795548"];
+
+class Invader{
+
+	constructor(x, y, num){
+		this._x = x; this._y = y;
+		this._str   = num.toString(2);
+		this._color = COLORS[num%COLORS.length];
+		this._size  = 10;
+
+		console.log(this._str);
+
+		// Pattern
+		if(this._str.length < 40){
+			let total  = 40 - this._str.length;
+			let prefix = "";
+			for(let i=0; i<total; i++) prefix += "0";
+			this._str = prefix + this._str;
 		}
-		for(let i=0; i<this._grids**2; i++){
-			let r = Math.floor(i/this._grids);
-			let c = Math.floor(i%this._grids);
-			this._board[r][c] = nums[i];
-		}
 	}
 
-	getGrids(){return this._grids;}
+	draw(){
 
-	getBoard(){return this._board;}
+		fill("#FFFFFF");
+		rect(this._x, this._y, 5, 5);
 
-	checkVH(r, c){
-		if(this.checkZero(r-1, c)) return this.swapGrid(r, c, r-1, c);
-		if(this.checkZero(r+1, c)) return this.swapGrid(r, c, r+1, c);
-		if(this.checkZero(r, c-1)) return this.swapGrid(r, c, r, c-1);
-		if(this.checkZero(r, c+1)) return this.swapGrid(r, c, r, c+1);
-		return {r:-1, c:-1};
-	}
+		stroke(this._color);
+		fill(this._color);
 
-	checkZero(r, c){
-		if(r < 0) return false;
-		if(c < 0) return false;
-		if(this._grids-1 < r) return false;
-		if(this._grids-1 < c) return false;
-		if(this._board[r][c] != 0) return false;
-		return true;
-	}
-
-	swapGrid(fR, fC, tR, tC){
-		let tmp = this._board[tR][tC];
-		this._board[tR][tC] = this._board[fR][fC];
-		this._board[fR][fC] = tmp;
-		return {r:tR, c:tC};
-	}
-
-	consoleBoard(){
-		let size = this._grids;
-		let line = " 15-Puzzle ";
-		while(line.length < 17){
-			line = line + "-";
-			if(line.length < 17) line = "-" + line;
-		}
-		line += "\n";
-		for(let r=0; r<size; r++){
-			line += "|";
-			for(let c=0; c<size; c++){
-				let n = this._board[r][c];
-				if(n < 10){
-					line += "  " + n;
-				}else if(n < 100){
-					line += " " + n;
-				}else{
-					line += n;
-				}
-				if(c < size-1) line += ",";
+		// Body
+		for(let i=0; i<this._str.length; i++){
+			if(this._str[i] === "1"){
+				let odd = i % 4;
+				let lX = this._x + this._size * odd;
+				let lY = this._y + this._size * Math.floor(i/4);
+				square(lX, lY, this._size);
+				let rX = this._x - this._size * (odd-9);
+				let rY = lY
+				square(rX, rY, this._size);
 			}
-			line += "|\n";
 		}
-		line += "-----------------";
-		console.log(line);
+	}
+
+	setPosition(x, y){
+		this._x = x; this._y = y;
 	}
 }
