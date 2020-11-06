@@ -31,7 +31,7 @@ function setup(){
 	counter = 0;
 
 	// Scanline
-	sLine = new Scanline(canvas, drawingContext, width, height);
+	//sLine = new Scanline(canvas, drawingContext, width, height);
 	//sLine.init("../../images/scanline.png");
 }
 
@@ -43,7 +43,7 @@ function draw(){
 		invader.draw();
 	}
 
-	sLine.draw();// Scanline
+	//sLine.draw();// Scanline
 }
 
 function mousePressed(){
