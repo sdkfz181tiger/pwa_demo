@@ -16,9 +16,6 @@ const RAD_TO_DEG = 180 / Math.PI;
 let seed = "";
 for(let i=0; i<40; i++) seed += "1";
 const MAX = parseInt(seed, 2);
-const INV_ROWS = 1;
-const INV_COLS = 1;
-const INV_PAD  = 32;
 
 const COLORS = [
 	"#FFFFFF", "#F44336", "#E91E63", "#9C27B0", "#673Ab7", "#3F51B5", 
@@ -31,10 +28,7 @@ class Invader{
 		this._x = x; this._y = y;
 		this._str   = num.toString(2);
 		this._color = COLORS[num%COLORS.length];
-		this._size  = 10;
-
-		console.log(this._str);
-
+		this._size  = INV_DOT;
 		// Pattern
 		if(this._str.length < 40){
 			let total  = 40 - this._str.length;
@@ -45,28 +39,19 @@ class Invader{
 	}
 
 	draw(){
-
-		fill("#FFFFFF");
-		rect(this._x, this._y, 5, 5);
-
-		stroke(this._color);
 		fill(this._color);
 
 		// Body
 		for(let i=0; i<this._str.length; i++){
-			if(this._str[i] === "1"){
-				let odd = i % 4;
-				let lX = this._x + this._size * odd;
-				let lY = this._y + this._size * Math.floor(i/4);
-				square(lX, lY, this._size);
-				let rX = this._x - this._size * (odd-9);
-				let rY = lY
-				square(rX, rY, this._size);
-			}
+			if(this._str[i] === "0") continue;
+			let odd = i % 5;
+			let rX = this._x + this._size * odd - this._size*0.5;
+			let rY = this._y + this._size * Math.floor(i/5);
+			square(rX, rY, this._size);
+			if(odd == 0) continue;
+			let lX = this._x - this._size * odd - this._size*0.5;
+			let lY = rY
+			square(lX, lY, this._size);
 		}
-	}
-
-	setPosition(x, y){
-		this._x = x; this._y = y;
 	}
 }

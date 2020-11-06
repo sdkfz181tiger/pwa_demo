@@ -2,10 +2,11 @@
 //==========
 // JavaScript
 
-const T_COLOR = [
-	"#FFFFFF", "#F44336", "#E91E63", "#9C27B0", "#673Ab7", "#3F51B5", 
-	"#2196F3", "#03A9f4", "#00BCD4", "#009688", "#4CAF50", "#8BC34A", 
-	"#CDDC39", "#FFEB3B", "#FFC107", "#FF9800", "#FF5722", "#795548"];
+const INV_ROWS = 3;
+const INV_COLS = 5;
+const INV_DOT  = 4;
+const INV_SIZE = INV_DOT * 5;
+const INV_PAD  = INV_SIZE * 2.5;
 
 let invaders, counter;
 let sLine;
@@ -17,14 +18,14 @@ function setup(){
 
 	// Invader
 	invaders = [];
-	let startX = width * 0.5 - INV_PAD * INV_COLS * 0.5;
-	let startY = height * 0.2;
+	let sX = width * 0.5 - INV_PAD * (INV_COLS-1) * 0.5;
+	let sY = height * 0.2;
 	for(let r=0; r<INV_ROWS; r++){
 		let num = Math.floor(Math.random() * MAX);
 		for(let c=0; c<INV_COLS; c++){
-			let x = startX + c * INV_PAD;
-			let y = startY + r * INV_PAD;
-			let invader = new Invader(width*0.5, height*0.5, num);
+			let x = Math.floor(sX + c * INV_PAD);
+			let y = Math.floor(sY + r * INV_PAD);
+			let invader = new Invader(x, y, num);
 			invaders.push(invader);
 		}
 	}
