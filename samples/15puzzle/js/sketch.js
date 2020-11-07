@@ -46,15 +46,15 @@ function setup(){
 	}
 
 	// Scanline
-	sLine = new Scanline(canvas, drawingContext, width, height);
-	sLine.init("../../images/scanline.png");
+	// sLine = new Scanline(canvas, drawingContext, width, height);
+	// sLine.init("../../images/scanline.png");
 }
 
 function draw(){
 	background(0, 0, 0);
 	noStroke(); fill(33, 33, 33);
 	for(let tile of tiles) tile.draw();
-	sLine.draw();// Scanline
+	//sLine.draw();// Scanline
 }
 
 function mousePressed(){
