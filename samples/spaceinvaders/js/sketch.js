@@ -2,7 +2,7 @@
 //==========
 // JavaScript
 
-const INV_ROWS = 5;
+const INV_ROWS = 6;
 const INV_COLS = 11;
 const INV_DOT  = 2;
 const INV_STEP = INV_DOT * 10;
@@ -12,7 +12,7 @@ let sLine;
 
 function setup(){
 	createCanvas(windowWidth, windowHeight);
-	frameRate(16);
+	frameRate(32);
 	showMsg("setup");
 
 	// Invader
@@ -21,7 +21,7 @@ function setup(){
 	dirX = -1;
 	dirY = 0;
 	let sX = width * 0.5 - INV_STEP * (INV_COLS-1) * 0.5;
-	let sY = height * 0.55;
+	let sY = height * 0.4;
 	for(let r=0; r<INV_ROWS; r++){
 		let num = Math.floor(Math.random() * MAX);
 		for(let c=0; c<INV_COLS; c++){
@@ -48,19 +48,23 @@ function draw(){
 	// Draw
 	for(let invader of invaders) invader.draw();
 	// Step
-	invaders[i].step(dirX, dirY);
+	if(dirY == 0){
+		invaders[i].step(dirX, dirY);
+	}else{
+		invaders[i].step(0, dirY);
+	}
 
 	if(invaders.length-1 < ++cnt){
 		cnt = 0;
 		if(dirY == 0){
-			dirX = 0;
-			dirY = 1;
+			let prev = dirX;
+			for(let invader of invaders){
+				if(invader.x < INV_STEP*2) dirX = 1;
+				if(width-INV_STEP*2 < invader.x) dirX = -1;
+				if(prev != dirX) dirY = 1;
+			}
 		}else{
 			dirY = 0;
-		}
-		for(let invader of invaders){
-			if(invader.x < INV_STEP*2) dirX = 1;
-			if(width-INV_STEP*2 < invader.x) dirX = -1;
 		}
 	}
 

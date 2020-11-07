@@ -1,7 +1,7 @@
 //==========
 // ServiceWorker
 
-const CACHE_VERSION = "cache_0.4.2";
+const CACHE_VERSION = "cache_0.4.3";
 const CACHE_FILES = [
 	"./index.html",
 	"./css/custom.css",
