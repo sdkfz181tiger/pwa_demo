@@ -25,10 +25,13 @@ const COLORS = [
 class Invader{
 
 	constructor(x, y, num){
-		this._x = x; this._y = y;
+		this._x     = x; 
+		this._y     = y;
 		this._str   = num.toString(2);
 		this._color = COLORS[num%COLORS.length];
-		this._size  = INV_DOT;
+		this._dot   = INV_DOT;
+		this._w     = INV_DOT * 5*2;
+		this._h     = INV_DOT * Math.floor(this._str.length/5);
 		// Pattern
 		if(this._str.length < 40){
 			let total  = 40 - this._str.length;
@@ -38,6 +41,16 @@ class Invader{
 		}
 	}
 
+	get x(){return this._x;}
+	get y(){return this._x;}
+	get w(){return this._w;}
+	get h(){return this._h;}
+
+	step(h, v){
+		if(h != 0) this._x += INV_STEP * h;
+		if(v != 0) this._y += INV_STEP * v;
+	}
+
 	draw(){
 		fill(this._color);
 
@@ -45,13 +58,13 @@ class Invader{
 		for(let i=0; i<this._str.length; i++){
 			if(this._str[i] === "0") continue;
 			let odd = i % 5;
-			let rX = this._x + this._size * odd - this._size*0.5;
-			let rY = this._y + this._size * Math.floor(i/5);
-			square(rX, rY, this._size);
+			let rX = this._x + this._dot * odd - this._dot*0.5;
+			let rY = this._y + this._dot * Math.floor(i/5);
+			square(rX, rY, this._dot);
 			if(odd == 0) continue;
-			let lX = this._x - this._size * odd - this._size*0.5;
+			let lX = this._x - this._dot * odd - this._dot*0.5;
 			let lY = rY
-			square(lX, lY, this._size);
+			square(lX, lY, this._dot);
 		}
 	}
 }

@@ -185,7 +185,7 @@ function update(){
 	// Background
 	ctx.fillStyle = "#000000";
 	ctx.fillRect(0, 0, dWidth, dHeight);
-	ctx.fillStyle = "#444444";
+	ctx.fillStyle = "#333333";
 	ctx.fillRect(oX, oY, COLS*bSize, ROWS*bSize);
 	// Tetris
 	let data = tMng.getData();
