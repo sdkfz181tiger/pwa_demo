@@ -4,7 +4,7 @@
 
 const INV_ROWS = 5;
 const INV_COLS = 11;
-const INV_DOT  = 4;
+const INV_DOT  = 2;
 const INV_STEP = INV_DOT * 10;
 
 let invaders, cnt, dirX, dirY;
