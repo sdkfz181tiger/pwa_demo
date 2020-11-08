@@ -70,7 +70,3 @@ function draw(){
 
 	//sLine.draw();// Scanline
 }
-
-function mousePressed(){
-	
-}

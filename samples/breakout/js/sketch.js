@@ -2,71 +2,65 @@
 //==========
 // JavaScript
 
-const INV_ROWS = 5;
-const INV_COLS = 11;
-const INV_DOT  = 2;
-const INV_STEP = INV_DOT * 10;
+const ROWS    = 17;
+const COLS    = 7;
+const BLOCK_P = 10;
 
-let invaders, cnt, dirX, dirY;
-let sLine;
+let ball, paddle, blocks;
 
 function setup(){
 	createCanvas(windowWidth, windowHeight);
-	frameRate(16);
+	frameRate(48);
 	showMsg("setup");
 
-	// Invader
-	invaders = [];
-	cnt = 0;
-	dirX = -1;
-	dirY = 0;
-	let sX = width * 0.5 - INV_STEP * (INV_COLS-1) * 0.5;
-	let sY = height * 0.55;
-	for(let r=0; r<INV_ROWS; r++){
-		let num = Math.floor(Math.random() * MAX);
-		for(let c=0; c<INV_COLS; c++){
-			let x = Math.floor(sX + c * INV_STEP);
-			let y = Math.floor(sY - r * INV_STEP);
-			let invader = new Invader(x, y, num);
-			invaders.push(invader);
+	let bW = width / (COLS+2);
+	let bH = bW * 0.3;
+	let sX = width*0.5 - bW*COLS*0.5;
+	let sY = (ROWS+2)*bH;
+
+	// Ball
+	ball = new Ball(width*0.5, height*0.8);
+	// Paddle
+	paddle = new Paddle(width*0.5-bW*0.5, height-bH*3.0, bW, bH);
+	// Block
+	blocks = [];
+	for(let r=0; r<ROWS; r++){
+		for(let c=0; c<COLS; c++){
+			let x = sX + bW * c;
+			let y = sY - bH * r;
+			let color = COLORS[r%COLORS.length];
+			let block = new Block(x, y, bW, bH, color);
+			blocks.push(block);
 		}
 	}
-
-	// Scanline
-	// sLine = new Scanline(canvas, drawingContext, width, height);
-	// sLine.init("../../images/scanline.png");
 }
 
 function draw(){
 	background(0, 0, 0);
 	noStroke(); fill(33, 33, 33);
 
-	let r = Math.floor(cnt/INV_COLS);
-	let c = Math.floor(cnt%INV_COLS);
-	let i = cnt;
-	if(0 < dirX) i = (r+1)*INV_COLS-(c+1);
-	// Draw
-	for(let invader of invaders) invader.draw();
-	// Step
-	invaders[i].step(dirX, dirY);
+	// Ball
+	ball.draw();
 
-	if(invaders.length-1 < ++cnt){
-		cnt = 0;
-		if(dirY == 0){
-			dirX = 0;
-			dirY = 1;
-		}else{
-			dirY = 0;
-		}
-		for(let invader of invaders){
-			if(invader.x < INV_STEP*2) dirX = 1;
-			if(width-INV_STEP*2 < invader.x) dirX = -1;
-		}
+	// x Wall
+	ball.bounceWalls(0, width, 0, height);
+
+	// x Paddle
+	paddle.draw();
+	if(ball.intersects(paddle)) ball.bounce(paddle);
+
+	// x Block
+	for(let block of blocks) block.draw();
+	for(let i=blocks.length-1; 0<=i; i--){
+		let block = blocks[i];
+		if(!ball.intersects(block)) continue;
+		if(!ball.bounce(block)) continue;
+		blocks.splice(i, 1);// Splice
+		break;
 	}
-
-	//sLine.draw();// Scanline
 }
 
 function mousePressed(){
-	
+	// Move
+	paddle.moveTo(mouseX, paddle.y);
 }
