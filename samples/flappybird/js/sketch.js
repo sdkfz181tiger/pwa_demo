@@ -35,7 +35,7 @@ function init(){
 	]};
 	hm = new Hammer(document.body, options);
 	hm.on("singletap", (e)=>{
-		flappy.jump();
+		flappy.jump(e);
 	});
 
 	// Flappy
@@ -47,6 +47,7 @@ function init(){
 function update(){
 	ctx.clearRect(0, 0, dWidth, dHeight);// Clear
 
+	flappy.bounceWalls(0, dWidth, 0, dHeight);
 	flappy.draw();
 
 	setTimeout(update, 50);

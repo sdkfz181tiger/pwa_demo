@@ -29,7 +29,7 @@ class Flappy{
 		this._size    = size;
 		this._color   = color;
 		this._gravity = 1.2;
-		this._forceY  = -15.0;
+		this._forceY  = -18.0;
 	}
 
 	get x(){return this._pos.x;}
@@ -37,13 +37,35 @@ class Flappy{
 	set x(n){this._pos.x = n;}
 	set y(n){this._pos.y = n;}
 
-	jump(){
+	jump(e){
+		if(this._pos.x < e.center.x) this._vel.x = 4;
+		if(e.center.x < this._pos.x) this._vel.x = -4;
 		this._vel.y = this._forceY;
 	}
 
+	bounceWalls(l, r, t, b){
+		if(this._pos.x < l){
+			this._pos.x = r;
+			return;
+		}
+		if(r < this._pos.x){
+			this._pos.x = l;
+			return;
+		}
+		if(b < this._pos.y){
+			this._pos.y = b;
+			this._vel.x *= 0.8;
+			this._vel.y *= -0.8;
+			if(Math.abs(this._vel.x) < 0.2) this._vel.x = 0.0;
+			if(Math.abs(this._vel.y) < 1) this._vel.y = 0.0;
+			return;
+		}
+	}
+
 	draw(){
-		// Gravity
+		// Velocity
 		this._vel.y += this._gravity;
+		this._pos.x += this._vel.x;
 		this._pos.y += this._vel.y;
 		// Draw
 		this._ctx.beginPath();
