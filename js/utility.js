@@ -12,8 +12,7 @@ function registerServiceWorker(callback){
 	if("serviceWorker" in navigator){
 		navigator.serviceWorker.register("service_worker.js", 
 			{scope: "./"}).then((reg)=>{
-				showMsg("ServiceWorker registered");
-				console.log("ServiceWorker registered", reg);
+				console.log("ServiceWorker registered");
 				callback();// Callback
 			}).catch((error)=>{
 				showMsg("Registration failed");

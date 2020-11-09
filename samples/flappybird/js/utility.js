@@ -18,6 +18,46 @@ for(let i=0; i<360; i++){
 }
 
 //==========
+// Flappy
+
+class Flappy{
+
+	constructor(ctx, x, y, size=8, color="#FFFFFF"){
+		this._ctx     = ctx;
+		this._pos     = new Vec2(x, y);
+		this._vel     = new Vec2(0, 0);
+		this._size    = size;
+		this._color   = color;
+		this._gravity = 1.2;
+		this._forceY  = -15.0;
+	}
+
+	get x(){return this._pos.x;}
+	get y(){return this._pos.y;}
+	set x(n){this._pos.x = n;}
+	set y(n){this._pos.y = n;}
+
+	jump(){
+		this._vel.y = this._forceY;
+	}
+
+	draw(){
+		// Gravity
+		this._vel.y += this._gravity;
+		this._pos.y += this._vel.y;
+		// Draw
+		this._ctx.beginPath();
+		this._ctx.rect(
+			this.x-this._size*0.5,
+			this.y-this._size*0.5,
+			this._size, this._size);
+		this._ctx.closePath();
+		this._ctx.stroke();
+	}
+}
+
+/*
+//==========
 // Ship
 
 class Ship{
@@ -179,16 +219,29 @@ class Bullet{
 		this._y += this._spd * TBL_SIN[this._deg];
 		this._ctx.beginPath();
 		this._ctx.rect(
-			this._x-this._r*0.5,
-			this._y-this._r*0.5,
+			this._x-this._r*0.5, this._y-this._r*0.5, 
 			this._r, this._r);
 		this._ctx.closePath();
 		this._ctx.stroke();
 	}
 }
+*/
 
 //==========
 // Vector
+
+class Vec2{
+
+	constructor(x, y){
+		this._x = x; 
+		this._y = y;
+	}
+
+	get x(){return this._x;}
+	get y(){return this._y;}
+	set x(n){this._x = n;}
+	set y(n){this._y = n;}
+}
 
 function isRight(fromX, fromY, toX, toY, pX, pY){
 	let c = {x:fromX, y:fromY};

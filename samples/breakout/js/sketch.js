@@ -14,12 +14,13 @@ function setup(){
 	showMsg("setup");
 
 	let bW = width / (COLS+2);
-	let bH = bW * 0.3;
+	let bH = height*0.5 / (ROWS+2);
 	let sX = width*0.5 - bW*COLS*0.5;
 	let sY = (ROWS+2)*bH;
+	let bS = (bW<bH) ? bW*0.5:bH*0.5;
 
 	// Ball
-	ball = new Ball(width*0.5, height*0.8);
+	ball = new Ball(width*0.5, height*0.8, bS);
 	// Paddle
 	paddle = new Paddle(width*0.5-bW*0.5, height-bH*3.0, bW, bH);
 	// Block
