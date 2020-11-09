@@ -240,34 +240,21 @@ function checkCross(aX, aY, bX, bY, cX, cY, dX, dY){
 }
 
 function calcCross(aX, aY, bX, bY, cX, cY, dX, dY){
-	let dev = (bY-aY)*(dX-cX)-(bX-aX)*(dY-cY);
-	let d1  = cY*dX-cX*dY;
-	let d2  = aY*bX-aX*bY;
-	let x   = (d1*(bX-aX)-d2*(dX-cX)) / dev;
-	let y   = (d1*(bY-aY)-d2*(dY-cY)) / dev;
-	let col = new Vec2(x, y);
-	circle(col.x, col.y, 2);
-
-	let dist  = Math.sqrt((col.x-dX)**2 + (col.y-dY)**2);
-	console.log(dist);
-	let wFrom = new Vec2(aX, aY);
-	let wTo   = new Vec2(bX, bY);
-	let vFrom = new Vec2(cX, cY);
-	let vTo   = new Vec2(dX, dY);
-
-	let vWall = new Vec2(wTo.x-wFrom.x, wTo.y-wFrom.y);
+	let dev   = (bY-aY)*(dX-cX)-(bX-aX)*(dY-cY);
+	let d1    = cY*dX-cX*dY;
+	let d2    = aY*bX-aX*bY;
+	let pX    = (d1*(bX-aX)-d2*(dX-cX)) / dev;
+	let pY    = (d1*(bY-aY)-d2*(dY-cY)) / dev;
+	let dist  = Math.sqrt((pX-dX)**2 + (pY-dY)**2);
+	let vWall = new Vec2(bX-aX, bY-aY);
 	let radW  = Math.atan2(vWall.y, vWall.x);
-
 	let uWall = new Vec2(vWall.y, vWall.x*-1.0);
 	let radU  = Math.atan2(uWall.y, uWall.x);
-
-	let vRay  = new Vec2(vFrom.x-col.x, vFrom.y-col.y);
+	let vRay  = new Vec2(cX-pX, cY-pY);
 	let radR  = Math.atan2(vRay.y, vRay.x);
-
-	let radT = radR + (radU-radR)*2;
-	let tX = col.x + dist * Math.cos(radT);
-	let tY = col.y + dist * Math.sin(radT);
-	line(col.x, col.y, tX, tY);
+	let radT  = radR + (radU-radR)*2;
+	let tX    = pX + dist * Math.cos(radT);
+	let tY    = pY + dist * Math.sin(radT);
+	line(pX, pY, tX, tY);
 	circle(tX, tY, 2);
-
 }
