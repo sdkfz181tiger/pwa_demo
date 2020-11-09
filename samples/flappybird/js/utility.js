@@ -22,7 +22,7 @@ for(let i=0; i<360; i++){
 
 class Flappy{
 
-	constructor(ctx, x, y, size=8, color="#FFFFFF"){
+	constructor(ctx, x, y, size=32, color="#FFFFFF"){
 		this._ctx     = ctx;
 		this._pos     = new Vec2(x, y);
 		this._vel     = new Vec2(0, 0);
@@ -52,8 +52,8 @@ class Flappy{
 			this._pos.x = l;
 			return;
 		}
-		if(b < this._pos.y){
-			this._pos.y = b;
+		if(b < this._pos.y + this._size*0.5){
+			this._pos.y = b - this._size*0.5;
 			this._vel.x *= 0.8;
 			this._vel.y *= -0.8;
 			if(Math.abs(this._vel.x) < 0.2) this._vel.x = 0.0;
