@@ -128,15 +128,12 @@ class Asteroid{
 		this._rot += 1;
 		if(360 <= this._rot) this._rot -= 360;
 		let pD = Math.floor(360/this._rads.length);
-		let aX = this._x + this._rads[0]*TBL_COS[this._rot];
-		let aY = this._y + this._rads[0]*TBL_SIN[this._rot];
 		this._ctx.beginPath();
-		this._ctx.moveTo(aX, aY);
-		for(let i=1; i<this._rads.length; i++){
-			let bD = Math.floor(this._rot + pD*i) % 360;
-			let bX = this._x + this._rads[i]*TBL_COS[bD];
-			let bY = this._y + this._rads[i]*TBL_SIN[bD];
-			this._ctx.lineTo(bX, bY);
+		for(let i=0; i<this._rads.length; i++){
+			let aD = Math.floor(this._rot + pD*i) % 360;
+			let aX = this._x + this._rads[i]*TBL_COS[aD];
+			let aY = this._y + this._rads[i]*TBL_SIN[aD];
+			this._ctx.lineTo(aX, aY);
 		}
 		this._ctx.closePath();
 		this._ctx.stroke();
@@ -145,12 +142,13 @@ class Asteroid{
 	contains(x, y){
 		let pD = Math.floor(360/this._rads.length);
 		for(let i=0; i<this._rads.length-1; i++){
+			let n = (i < this._rads.length-1) ? i+1 : 0;
 			let aD = Math.floor(this._rot + pD*i) % 360;
-			let bD = Math.floor(this._rot + pD*(i+1)) % 360;
+			let bD = Math.floor(this._rot + pD*n) % 360;
 			let aX = this._x + this._rads[i]*TBL_COS[aD];
 			let aY = this._y + this._rads[i]*TBL_SIN[aD];
-			let bX = this._x + this._rads[i+1]*TBL_COS[bD];
-			let bY = this._y + this._rads[i+1]*TBL_SIN[bD];
+			let bX = this._x + this._rads[n]*TBL_COS[bD];
+			let bY = this._y + this._rads[n]*TBL_SIN[bD];
 			if(!isRight(aX, aY, bX, bY, x, y)) return false;
 		}
 		return true;

@@ -90,7 +90,7 @@ class Asteroid{
 		this._x   = x;
 		this._y   = y;
 		this._r   = r;
-		this._rot = 60;
+		this._rot = Math.random() * 360;
 
 		let spd = 1 + Math.random() * 3;
 		let deg = Math.floor(Math.random() * 360);
@@ -117,15 +117,12 @@ class Asteroid{
 		//if(360 <= this._rot) this._rot -= 360;
 
 		let pD = Math.floor(360/this._rads.length);
-		let aX = this._x + this._rads[0]*TBL_COS[this._rot];
-		let aY = this._y + this._rads[0]*TBL_SIN[this._rot];
 		this._ctx.beginPath();
-		this._ctx.moveTo(aX, aY);
-		for(let i=1; i<this._rads.length; i++){
-			let bD = Math.floor(this._rot + pD*i) % 360;
-			let bX = this._x + this._rads[i]*TBL_COS[bD];
-			let bY = this._y + this._rads[i]*TBL_SIN[bD];
-			this._ctx.lineTo(bX, bY);
+		for(let i=0; i<this._rads.length; i++){
+			let aD = Math.floor(this._rot + pD*i) % 360;
+			let aX = this._x + this._rads[i]*TBL_COS[aD];
+			let aY = this._y + this._rads[i]*TBL_SIN[aD];
+			this._ctx.lineTo(aX, aY);
 		}
 		this._ctx.closePath();
 		this._ctx.stroke();
@@ -133,13 +130,14 @@ class Asteroid{
 
 	contains(x, y){
 		let pD = Math.floor(360/this._rads.length);
-		for(let i=0; i<this._rads.length-1; i++){
+		for(let i=0; i<this._rads.length; i++){
+			let n = (i < this._rads.length-1) ? i+1 : 0;
 			let aD = Math.floor(this._rot + pD*i) % 360;
-			let bD = Math.floor(this._rot + pD*(i+1)) % 360;
+			let bD = Math.floor(this._rot + pD*n) % 360;
 			let aX = this._x + this._rads[i]*TBL_COS[aD];
 			let aY = this._y + this._rads[i]*TBL_SIN[aD];
-			let bX = this._x + this._rads[i+1]*TBL_COS[bD];
-			let bY = this._y + this._rads[i+1]*TBL_SIN[bD];
+			let bX = this._x + this._rads[n]*TBL_COS[bD];
+			let bY = this._y + this._rads[n]*TBL_SIN[bD];
 			if(!isRight(aX, aY, bX, bY, x, y)) return false;
 		}
 		return true;
@@ -150,27 +148,25 @@ class Asteroid{
 		let preY = ball.y - ball.vY;
 
 		let pD = Math.floor(360/this._rads.length);
-		for(let i=0; i<this._rads.length-1; i++){
+		for(let i=0; i<this._rads.length; i++){
+			let n = (i < this._rads.length-1) ? i+1 : 0;
 			let aD = Math.floor(this._rot + pD*i) % 360;
-			let bD = Math.floor(this._rot + pD*(i+1)) % 360;
+			let bD = Math.floor(this._rot + pD*n) % 360;
 			let aX = this._x + this._rads[i]*TBL_COS[aD];
 			let aY = this._y + this._rads[i]*TBL_SIN[aD];
-			let bX = this._x + this._rads[i+1]*TBL_COS[bD];
-			let bY = this._y + this._rads[i+1]*TBL_SIN[bD];
-			if(this.checkCross(aX, aY, bX, bY,
+			let bX = this._x + this._rads[n]*TBL_COS[bD];
+			let bY = this._y + this._rads[n]*TBL_SIN[bD];
+			if(checkCross(aX, aY, bX, bY,
 				ball.x, ball.y, preX, preY)){
+
+				let collide = calcCross(aX, aY, bX, bY, 
+					ball.x, ball.y, preX, preY);
+				circle(col.x, col.y, 5);
+
 				return true;
 			}
 		}
 		return false;
-	}
-
-	checkCross(aX, aY, bX, bY, cX, cY, dX, dY){
-		let a = (cX-dX)*(aY-cY)+(cY-dY)*(cX-aX);
-		let b = (cX-dX)*(bY-cY)+(cY-dY)*(cX-bX);
-		let c = (aX-bX)*(cY-aY)+(aY-bY)*(aX-cX);
-		let d = (aX-bX)*(dY-aY)+(aY-bY)*(aX-dX);
-		return a*b<0 && c*d<0;
 	}
 }
 
@@ -376,3 +372,21 @@ function calcVerticalL(v){return {x:v.y, y:v.x*-1.0};}
 function calcVerticalR(v){return {x:v.y*-1.0, y:v.x};}
 function calcDot(v1, v2){return v1.x*v2.x+v1.y*v2.y;}
 function calcLength(v){return Math.sqrt(v.x*v.x+v.y*v.y);}
+
+function checkCross(aX, aY, bX, bY, cX, cY, dX, dY){
+	let a = (cX-dX)*(aY-cY)+(cY-dY)*(cX-aX);
+	let b = (cX-dX)*(bY-cY)+(cY-dY)*(cX-bX);
+	let c = (aX-bX)*(cY-aY)+(aY-bY)*(aX-cX);
+	let d = (aX-bX)*(dY-aY)+(aY-bY)*(aX-dX);
+	return a*b<0 && c*d<0;
+}
+
+function calcCross(aX, aY, bX, bY, cX, cY, dX, dY){
+	let dev = (bY-aY)*(dX-cX)-(bX-aX)*(dY-cY);
+	let d1  = cY*dX-cX*dY;
+	let d2  = aY*bX-aX*bY;
+	let x   = (d1*(bX-aX)-d2*(dX-cX)) / dev;
+	let y   = (d1*(bY-aY)-d2*(dY-cY)) / dev;
+	console.log(x, y);
+	return new Vec2(x, y);
+}
