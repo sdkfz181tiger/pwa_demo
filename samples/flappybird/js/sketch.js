@@ -5,7 +5,7 @@
 let dWidth, dHeight;
 let canvas, ctx, hm;
 
-let flappy;
+let flappy, asteroid;
 
 // Window
 window.addEventListener("load", (e)=>{
@@ -39,7 +39,8 @@ function init(){
 	});
 
 	// Flappy
-	flappy = new Flappy(ctx, dWidth*0.5, dHeight*0.5);
+	flappy = new Flappy(ctx, dWidth*0.5, dHeight*0.1);
+	asteroid = new Asteroid(ctx, dWidth*0.5, dHeight*0.8, 100);
 
 	update();
 }
@@ -47,8 +48,32 @@ function init(){
 function update(){
 	ctx.clearRect(0, 0, dWidth, dHeight);// Clear
 
-	flappy.bounceWalls(0, dWidth, 0, dHeight);
 	flappy.draw();
+	asteroid.draw();
 
+	if(asteroid.contains(flappy.x, flappy.y)){
+		if(asteroid.detectCross(flappy)){
+			line(flappy.x, flappy.y, flappy.x-flappy.vX, flappy.y-flappy.vY);
+			circle(asteroid.x, asteroid.y, 5);
+			return;
+		}
+	}
+
+	flappy.bounceWalls(0, dWidth, 0, dHeight);
 	setTimeout(update, 50);
+}
+
+function line(aX, aY, bX, bY){
+	ctx.beginPath();
+	ctx.moveTo(aX, aY);
+	ctx.lineTo(bX, bY);
+	ctx.closePath();
+	ctx.stroke();
+}
+
+function circle(x, y, radius){
+	ctx.beginPath();
+	ctx.arc(x, y, radius, 0, Math.PI*2, false);
+	ctx.closePath();
+	ctx.stroke();
 }
