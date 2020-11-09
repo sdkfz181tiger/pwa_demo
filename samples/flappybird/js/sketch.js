@@ -52,10 +52,8 @@ function update(){
 	asteroid.draw();
 
 	if(asteroid.contains(flappy.x, flappy.y)){
-		console.log("contains!!");
 		if(asteroid.detectCross(flappy)){
 			line(flappy.x, flappy.y, flappy.x-flappy.vX, flappy.y-flappy.vY);
-			circle(asteroid.x, asteroid.y, 5);
 			return;
 		}
 	}
