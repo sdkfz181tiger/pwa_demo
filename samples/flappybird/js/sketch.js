@@ -5,7 +5,7 @@
 let dWidth, dHeight;
 let canvas, ctx, hm;
 
-let flappy, asteroid;
+let asteroid, balls;
 
 // Window
 window.addEventListener("load", (e)=>{
@@ -34,13 +34,18 @@ function init(){
 		[Hammer.Tap, {event: "singletap"}]
 	]};
 	hm = new Hammer(document.body, options);
-	hm.on("singletap", (e)=>{
-		flappy.jump(e);
-	});
+	hm.on("singletap", (e)=>{ball.jump(e);});
 
-	// Flappy
-	flappy = new Flappy(ctx, dWidth*0.5, dHeight*0.1);
-	asteroid = new Asteroid(ctx, dWidth*0.5, dHeight*0.8, 100);
+	// Asteroid
+	asteroid = new Asteroid(ctx, dWidth*0.5, dHeight*0.5, 200);
+	// Balls
+	balls = [];
+	for(let i=0; i<30; i++){
+		let x = dWidth*0.25 + dWidth*0.5*Math.random();
+		let y = 0;
+		let ball = new Ball(ctx, x, y);
+		balls.push(ball);
+	}
 
 	update();
 }
@@ -48,17 +53,18 @@ function init(){
 function update(){
 	ctx.clearRect(0, 0, dWidth, dHeight);// Clear
 
-	flappy.draw();
+	// Asteroid
 	asteroid.draw();
-
-	if(asteroid.contains(flappy.x, flappy.y)){
-		if(asteroid.detectCross(flappy)){
-			line(flappy.x, flappy.y, flappy.x-flappy.vX, flappy.y-flappy.vY);
-			return;
-		}
+	// Balls
+	for(let ball of balls){
+		// x Asteroid
+		asteroid.intersects(ball);
+		// x Walls
+		ball.bounceWalls(0, dWidth, 0, dHeight);
+		// Draw
+		ball.draw();
 	}
 
-	flappy.bounceWalls(0, dWidth, 0, dHeight);
 	setTimeout(update, 50);
 }
 

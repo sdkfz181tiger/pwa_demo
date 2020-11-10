@@ -20,7 +20,7 @@ for(let i=0; i<360; i++){
 //==========
 // Flappy
 
-class Flappy{
+class Ball{
 
 	constructor(ctx, x, y, size=8, color="#FFFFFF"){
 		this._ctx     = ctx;
@@ -30,6 +30,7 @@ class Flappy{
 		this._color   = color;
 		this._gravity = 1.2;
 		this._forceY  = -18.0;
+		this._active  = true;
 	}
 
 	get x(){return this._pos.x;}
@@ -39,10 +40,21 @@ class Flappy{
 	set x(n){this._pos.x = n;}
 	set y(n){this._pos.y = n;}
 
+	stop(){
+		this._active = false;
+	}
+
 	jump(e){
 		if(this._pos.x < e.center.x) this._vel.x = 4;
 		if(e.center.x < this._pos.x) this._vel.x = -4;
 		this._vel.y = this._forceY;
+	}
+
+	reflect(x, y, rad){
+		this._pos.x = x;
+		this._pos.y = y;
+		this._vel.x = this._vel.magnitude * Math.cos(rad);
+		this._vel.y = this._vel.magnitude * Math.sin(rad);
 	}
 
 	bounceWalls(l, r, t, b){
@@ -56,8 +68,8 @@ class Flappy{
 		}
 		if(b < this._pos.y + this._size*0.5){
 			this._pos.y = b - this._size*0.5;
-			this._vel.x *= 0.8;
-			this._vel.y *= -0.8;
+			this._vel.x *= 0.95;
+			this._vel.y *= -1.1;
 			if(Math.abs(this._vel.x) < 0.2) this._vel.x = 0.0;
 			if(Math.abs(this._vel.y) < 1) this._vel.y = 0.0;
 			return;
@@ -65,18 +77,21 @@ class Flappy{
 	}
 
 	draw(){
-		// Velocity
-		this._vel.y += this._gravity;
-		this._pos.x += this._vel.x;
-		this._pos.y += this._vel.y;
+		
 		// Draw
 		this._ctx.beginPath();
 		this._ctx.rect(
-			this.x-this._size*0.5,
-			this.y-this._size*0.5,
+			this._pos.x-this._size*0.5,
+			this._pos.y-this._size*0.5,
 			this._size, this._size);
 		this._ctx.closePath();
 		this._ctx.stroke();
+
+		// Active
+		if(!this._active) return;
+		this._vel.y += this._gravity;
+		this._pos.x += this._vel.x;
+		this._pos.y += this._vel.y;
 	}
 }
 
@@ -85,7 +100,7 @@ class Flappy{
 
 class Asteroid{
 
-	constructor(ctx, x, y, r){
+	constructor(ctx, x, y, r, t=6){
 		this._ctx = ctx;
 		this._x   = x;
 		this._y   = y;
@@ -98,7 +113,7 @@ class Asteroid{
 		this._vY = spd * TBL_SIN[deg];
 
 		this._rads = [];
-		for(let i=0; i<3; i++){
+		for(let i=0; i<t; i++){
 			let rdm = 0.7+Math.random()*0.3;
 			this._rads.push(this._r*rdm);
 		}
@@ -111,10 +126,6 @@ class Asteroid{
 	set y(n){this._y = n;}
 
 	draw(){
-		//this._x += this._vX;
-		//this._y += this._vY;
-		//this._rot += 1;
-		//if(360 <= this._rot) this._rot -= 360;
 
 		let pD = Math.floor(360/this._rads.length);
 		this._ctx.beginPath();
@@ -128,7 +139,12 @@ class Asteroid{
 		this._ctx.stroke();
 	}
 
-	contains(x, y){
+	intersects(ball){
+		if(!this.contains(ball)) return;
+		this.crosses(ball);
+	}
+
+	contains(ball){
 		let pD = Math.floor(360/this._rads.length);
 		for(let i=0; i<this._rads.length; i++){
 			let n = (i < this._rads.length-1) ? i+1 : 0;
@@ -138,12 +154,12 @@ class Asteroid{
 			let aY = this._y + this._rads[i]*TBL_SIN[aD];
 			let bX = this._x + this._rads[n]*TBL_COS[bD];
 			let bY = this._y + this._rads[n]*TBL_SIN[bD];
-			if(!isRight(aX, aY, bX, bY, x, y)) return false;
+			if(!isRight(aX, aY, bX, bY, ball.x, ball.y)) return false;
 		}
 		return true;
 	}
 
-	detectCross(ball){
+	crosses(ball){
 		let preX = ball.x - ball.vX;
 		let preY = ball.y - ball.vY;
 
@@ -157,11 +173,11 @@ class Asteroid{
 			let bX = this._x + this._rads[n]*TBL_COS[bD];
 			let bY = this._y + this._rads[n]*TBL_SIN[bD];
 			if(checkCross(aX, aY, bX, bY, preX, preY, ball.x, ball.y)){
-				calcCross(aX, aY, bX, bY, preX, preY, ball.x, ball.y);
-				return true;
+				let ref = calcCross(aX, aY, bX, bY, preX, preY, ball.x, ball.y);
+				ball.reflect(ref.x, ref.y, ref.rad);
+				return;
 			}
 		}
-		return false;
 	}
 }
 
@@ -252,9 +268,8 @@ function calcCross(aX, aY, bX, bY, cX, cY, dX, dY){
 	let radU  = Math.atan2(uWall.y, uWall.x);
 	let vRay  = new Vec2(cX-pX, cY-pY);
 	let radR  = Math.atan2(vRay.y, vRay.x);
-	let radT  = radR + (radU-radR)*2;
-	let tX    = pX + dist * Math.cos(radT);
-	let tY    = pY + dist * Math.sin(radT);
-	line(pX, pY, tX, tY);
-	circle(tX, tY, 2);
+	let radV  = radR + (radU-radR)*2;
+	let vX    = pX + dist * Math.cos(radV);
+	let vY    = pY + dist * Math.sin(radV);
+	return {x:vX, y:vY, rad:radV};
 }
