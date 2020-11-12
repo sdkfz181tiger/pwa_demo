@@ -76,7 +76,7 @@ function update(){
 		if(tunnel.intersects(bird)) gOver = true;
 		tunnel.draw();
 		if(0 < tunnel.x+T_WIDTH) continue;
-		let n = (i-2<0) ? tunnels.length-(2-i):i-2;
+		let n = (i<2) ? tunnels.length-(2-i):i-2;
 		tunnel.x = tunnels[n].x + T_PAD_X;
 	}
 
