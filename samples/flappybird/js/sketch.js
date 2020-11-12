@@ -2,10 +2,17 @@
 //==========
 // JavaScript
 
+const BIRD_GRAVITY = 1.2;
+const BIRD_FORCE = -12.0;
+const T_WIDTH = 30;
+const T_PAD_X = 90;
+const T_PAD_Y = 120;
+const T_SPEED = -2.0;
+
 let dWidth, dHeight;
 let canvas, ctx, hm;
 
-let asteroid, balls;
+let tunnels, bird;
 
 // Window
 window.addEventListener("load", (e)=>{
@@ -34,51 +41,49 @@ function init(){
 		[Hammer.Tap, {event: "singletap"}]
 	]};
 	hm = new Hammer(document.body, options);
-	hm.on("singletap", (e)=>{ball.jump(e);});
+	hm.on("singletap", (e)=>{bird.jump(e);});
 
-	// Asteroid
-	asteroid = new Asteroid(ctx, dWidth*0.5, dHeight*0.5, 200);
-	// Balls
-	balls = [];
-	for(let i=0; i<30; i++){
-		let x = dWidth*0.25 + dWidth*0.5*Math.random();
-		let y = 0;
-		let ball = new Ball(ctx, x, y);
-		balls.push(ball);
+	// Tunnels
+	let tSX = dWidth * 0.5;
+	let tSY = dHeight * 0.5;
+	let offsetY = 0;
+	tunnels = [];
+	for(let i=0; i<8; i++){
+		let x = tSX + T_PAD_X * i;
+		let y = tSY + offsetY;
+		let tunnelT = new Tunnel(ctx, x, -5,
+			T_WIDTH, y-T_PAD_Y*0.5, T_SPEED);
+		tunnels.push(tunnelT);
+		let tunnelB = new Tunnel(ctx, x, y+T_PAD_Y*0.5, 
+			T_WIDTH, dHeight-y, T_SPEED);
+		tunnels.push(tunnelB);
+		offsetY = 60 - Math.random() * 120;
 	}
+
+	// Bird
+	bird = new Bird(ctx, dWidth*0.25, dHeight*0.5);
 
 	update();
 }
 
 function update(){
 	ctx.clearRect(0, 0, dWidth, dHeight);// Clear
+	let gOver = false;
 
 	// Asteroid
-	asteroid.draw();
-	// Balls
-	for(let ball of balls){
-		// x Asteroid
-		asteroid.intersects(ball);
-		// x Walls
-		ball.bounceWalls(0, dWidth, 0, dHeight);
-		// Draw
-		ball.draw();
+	for(let i=0; i<tunnels.length; i++){
+		let tunnel = tunnels[i];
+		if(tunnel.intersects(bird)) gOver = true;
+		tunnel.draw();
+		if(0 < tunnel.x+T_WIDTH) continue;
+		let n = (i-2<0) ? tunnels.length-(2-i):i-2;
+		tunnel.x = tunnels[n].x + T_PAD_X;
 	}
 
+	// x Walls
+	bird.bounceWalls(0, dWidth, 0, dHeight);
+	bird.draw();
+
+	if(gOver) return;
 	setTimeout(update, 50);
-}
-
-function line(aX, aY, bX, bY){
-	ctx.beginPath();
-	ctx.moveTo(aX, aY);
-	ctx.lineTo(bX, bY);
-	ctx.closePath();
-	ctx.stroke();
-}
-
-function circle(x, y, radius){
-	ctx.beginPath();
-	ctx.arc(x, y, radius, 0, Math.PI*2, false);
-	ctx.closePath();
-	ctx.stroke();
 }

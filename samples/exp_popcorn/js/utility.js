@@ -18,9 +18,9 @@ for(let i=0; i<360; i++){
 }
 
 //==========
-// Bird
+// Ball
 
-class Bird{
+class Ball{
 
 	constructor(ctx, x, y, size=8, color="#FFFFFF"){
 		this._ctx     = ctx;
@@ -28,8 +28,8 @@ class Bird{
 		this._vel     = new Vec2(0, 0);
 		this._size    = size;
 		this._color   = color;
-		this._gravity = BIRD_GRAVITY;
-		this._forceY  = BIRD_FORCE;
+		this._gravity = 1.2;
+		this._forceY  = -18.0;
 		this._active  = true;
 	}
 
@@ -45,6 +45,8 @@ class Bird{
 	}
 
 	jump(e){
+		if(this._pos.x < e.center.x) this._vel.x = 4;
+		if(e.center.x < this._pos.x) this._vel.x = -4;
 		this._vel.y = this._forceY;
 	}
 
@@ -66,8 +68,8 @@ class Bird{
 		}
 		if(b < this._pos.y + this._size*0.5){
 			this._pos.y = b - this._size*0.5;
-			this._vel.x *= 0.8;
-			this._vel.y *= -0.8;
+			this._vel.x *= 0.95;
+			this._vel.y *= -1.1;
 			if(Math.abs(this._vel.x) < 0.2) this._vel.x = 0.0;
 			if(Math.abs(this._vel.y) < 1) this._vel.y = 0.0;
 			return;
@@ -94,24 +96,27 @@ class Bird{
 }
 
 //==========
-// Tunnel
+// Asteroid
 
-class Tunnel{
+class Asteroid{
 
-	constructor(ctx, x, y, w, h, vX=0, vY=0){
+	constructor(ctx, x, y, r, t=6){
 		this._ctx = ctx;
 		this._x   = x;
 		this._y   = y;
-		this._w   = w;
-		this._h   = h;
-		this._vX  = vX;
-		this._vY  = vY;
+		this._r   = r;
+		this._rot = Math.random() * 360;
 
-		this._pts = [];
-		this._pts.push(new Vec2(0, 0));
-		this._pts.push(new Vec2(w, 0));
-		this._pts.push(new Vec2(w, h));
-		this._pts.push(new Vec2(0, h));
+		let spd = 1 + Math.random() * 3;
+		let deg = Math.floor(Math.random() * 360);
+		this._vX = spd * TBL_COS[deg];
+		this._vY = spd * TBL_SIN[deg];
+
+		this._rads = [];
+		for(let i=0; i<t; i++){
+			let rdm = 0.7+Math.random()*0.3;
+			this._rads.push(this._r*rdm);
+		}
 	}
 
 	get x(){return this._x;}
@@ -122,30 +127,57 @@ class Tunnel{
 
 	draw(){
 
-		this._x += this._vX;
-		this._y += this._vY;
-
+		let pD = Math.floor(360/this._rads.length);
 		this._ctx.beginPath();
-		for(let i=0; i<this._pts.length; i++){
-			this._ctx.lineTo(
-				this._x+this._pts[i].x, 
-				this._y+this._pts[i].y);
+		for(let i=0; i<this._rads.length; i++){
+			let aD = Math.floor(this._rot + pD*i) % 360;
+			let aX = this._x + this._rads[i]*TBL_COS[aD];
+			let aY = this._y + this._rads[i]*TBL_SIN[aD];
+			this._ctx.lineTo(aX, aY);
 		}
 		this._ctx.closePath();
 		this._ctx.stroke();
 	}
 
-	intersects(bird){
-		if(this.contains(bird)) return true;
-		return false;
+	intersects(ball){
+		if(!this.contains(ball)) return;
+		this.crosses(ball);
 	}
 
-	contains(bird){
-		if(bird.x < this._x) return false;
-		if(this._x+this._w < bird.x) return false;
-		if(bird.y < this._y) return false;
-		if(this._y+this._h < bird.y) return false;
+	contains(ball){
+		let pD = Math.floor(360/this._rads.length);
+		for(let i=0; i<this._rads.length; i++){
+			let n = (i < this._rads.length-1) ? i+1 : 0;
+			let aD = Math.floor(this._rot + pD*i) % 360;
+			let bD = Math.floor(this._rot + pD*n) % 360;
+			let aX = this._x + this._rads[i]*TBL_COS[aD];
+			let aY = this._y + this._rads[i]*TBL_SIN[aD];
+			let bX = this._x + this._rads[n]*TBL_COS[bD];
+			let bY = this._y + this._rads[n]*TBL_SIN[bD];
+			if(!isRight(aX, aY, bX, bY, ball.x, ball.y)) return false;
+		}
 		return true;
+	}
+
+	crosses(ball){
+		let preX = ball.x - ball.vX;
+		let preY = ball.y - ball.vY;
+
+		let pD = Math.floor(360/this._rads.length);
+		for(let i=0; i<this._rads.length; i++){
+			let n = (i < this._rads.length-1) ? i+1 : 0;
+			let aD = Math.floor(this._rot + pD*i) % 360;
+			let bD = Math.floor(this._rot + pD*n) % 360;
+			let aX = this._x + this._rads[i]*TBL_COS[aD];
+			let aY = this._y + this._rads[i]*TBL_SIN[aD];
+			let bX = this._x + this._rads[n]*TBL_COS[bD];
+			let bY = this._y + this._rads[n]*TBL_SIN[bD];
+			if(checkCross(aX, aY, bX, bY, preX, preY, ball.x, ball.y)){
+				let ref = calcCross(aX, aY, bX, bY, preX, preY, ball.x, ball.y);
+				ball.reflect(ref.x, ref.y, ref.rad);
+				return;
+			}
+		}
 	}
 }
 
@@ -227,7 +259,7 @@ function calcCross(aX, aY, bX, bY, cX, cY, dX, dY){
 	let dev   = (bY-aY)*(dX-cX)-(bX-aX)*(dY-cY);
 	let d1    = cY*dX-cX*dY;
 	let d2    = aY*bX-aX*bY;
-	let pX    = (d1*(bX-aX)-d2*(dX-cX)) / dev;// Collision
+	let pX    = (d1*(bX-aX)-d2*(dX-cX)) / dev;
 	let pY    = (d1*(bY-aY)-d2*(dY-cY)) / dev;
 	let dist  = Math.sqrt((pX-dX)**2 + (pY-dY)**2);
 	let vWall = new Vec2(bX-aX, bY-aY);
@@ -237,7 +269,7 @@ function calcCross(aX, aY, bX, bY, cX, cY, dX, dY){
 	let vRay  = new Vec2(cX-pX, cY-pY);
 	let radR  = Math.atan2(vRay.y, vRay.x);
 	let radV  = radR + (radU-radR)*2;
-	let vX    = pX + dist * Math.cos(radV);// Reflected
+	let vX    = pX + dist * Math.cos(radV);
 	let vY    = pY + dist * Math.sin(radV);
-	return {x:pX, y:pY, rad:radV};
+	return {x:vX, y:vY, rad:radV};
 }
