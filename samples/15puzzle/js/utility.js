@@ -13,30 +13,19 @@ function showMsg(msg){
 class FpzManager{
 
 	constructor(){
-		this._grids  = 4;
-		this._board  = [
-			[0, 0, 0, 0],
-			[0, 0, 0, 0],
-			[0, 0, 0, 0],
-			[0, 0, 0, 0]
-		];
+		this._grids = 4;
+		this._board = [];
 		this.resetBoard();
 	}
 
 	resetBoard(){
-		let nums = [];
-		for(let i=0; i<this._grids**2; i++) nums.push(i);
-		for(let i=nums.length-1; 0<i; i--){
-			let rdm = Math.floor(Math.random()*i);
-			let tmp = nums[rdm];
-			nums[rdm] = nums[i];
-			nums[i] = tmp;
-		}
-		for(let i=0; i<this._grids**2; i++){
-			let r = Math.floor(i/this._grids);
-			let c = Math.floor(i%this._grids);
-			this._board[r][c] = nums[i];
-		}
+		this._board = [
+			[ 1, 2, 3, 4],
+			[ 5, 6, 7, 8],
+			[ 9,10,11,12],
+			[13,14,15, 0]
+		];
+		this.wanderGrid(3, 3, 500);
 	}
 
 	getGrids(){return this._grids;}
@@ -58,6 +47,42 @@ class FpzManager{
 		if(this._grids-1 < c) return false;
 		if(this._board[r][c] != 0) return false;
 		return true;
+	}
+
+	wanderGrid(r, c, cnt){
+		if(cnt <= 0) return;
+		let dirs = [];
+		for(let i=0; i<4; i++) dirs.push(i);
+		for(let i=dirs.length-1; 0<i; i--){
+			let rdm = Math.floor(Math.random()*i);
+			let tmp = dirs[rdm];
+			dirs[rdm] = dirs[i];
+			dirs[i] = tmp;
+		}
+		for(let i=0; i<dirs.length; i++){
+			let dir = dirs[i];
+			let oR = 0;
+			let oC = 0;
+			if(dir == 0){// Left
+				if(c-1<0) continue;
+				oC--;
+			}
+			if(dir == 1){// Right
+				if(this._grids-1<c+1) continue;
+				oC++;
+			}
+			if(dir == 2){// Up
+				if(r-1<0) continue;
+				oR--;
+			}
+			if(dir == 3){// Down
+				if(this._grids-1<r+1) continue;
+				oR++;
+			}
+			this.swapGrid(r, c, r+oR, c+oC);
+			this.wanderGrid(r+oR, c+oC, cnt-1);
+			return;
+		}
 	}
 
 	swapGrid(fR, fC, tR, tC){
