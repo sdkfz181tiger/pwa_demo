@@ -11,6 +11,20 @@ window.addEventListener("load", (e)=>{
 	registerServiceWorker(init);
 });
 
+// Register ServiceWorker
+function registerServiceWorker(callback){
+	if("serviceWorker" in navigator){
+		navigator.serviceWorker.register("./service_worker.js",
+			{scope: "./"}).then((reg)=>{
+				console.log("ServiceWorker registered", reg.scope);
+				callback();// Callback
+			}).catch((error)=>{
+				showMsg("Registration failed");
+				console.log("Registration failed with", error);
+			});
+	}
+}
+
 function init(){
 	showMsg("init");
 
@@ -27,7 +41,7 @@ function init(){
 	ctx.fillRect(0, 0, dWidth, dHeight);
 	// Logo
 	let logo = new Image();
-	logo.src = "./images/logo512x512.png";
+	logo.src = "./pwa/images/logo512x512.png";
 	logo.addEventListener("load", (e)=>{
 		let scale = 0.7;
 		if(dWidth<dHeight){
@@ -47,6 +61,6 @@ function init(){
 
 	// Scanline
 	sLine = new Scanline(canvas, ctx, dWidth, dHeight);
-	sLine.init("./images/scanline.png");
+	sLine.init("./pwa/images/scanline.png");
 	setTimeout(()=>{sLine.draw();}, 250);
 }

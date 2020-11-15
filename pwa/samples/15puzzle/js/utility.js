@@ -25,7 +25,7 @@ class FpzManager{
 			[ 9,10,11,12],
 			[13,14,15, 0]
 		];
-		this.wanderGrid(3, 3, 500);
+		//this.wanderGrid(3, 3, 500);
 	}
 
 	getGrids(){return this._grids;}

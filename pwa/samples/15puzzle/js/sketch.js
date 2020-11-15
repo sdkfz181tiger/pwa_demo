@@ -11,11 +11,11 @@ const F_COLOR = [
 	"#333", "#333", "#333", "#FFF", "#FFF", "#FFF", 
 	"#333", "#333", "#333", "#333", "#FFF", "#FFF"];
 
-let fMng, sX, sY, tiles, sLine;
+let fMng, sX, sY, tiles;
 
 function setup(){
 	createCanvas(windowWidth, windowHeight);
-	frameRate(16);
+	frameRate(32);
 	showMsg("setup");
 
 	let pad = 32;
@@ -45,16 +45,14 @@ function setup(){
 		}
 	}
 
-	// Scanline
-	// sLine = new Scanline(canvas, drawingContext, width, height);
-	// sLine.init("../../images/scanline.png");
+	// Test
+	autoMove();
 }
 
 function draw(){
 	background(0, 0, 0);
 	noStroke(); fill(33, 33, 33);
 	for(let tile of tiles) tile.draw();
-	//sLine.draw();// Scanline
 }
 
 function mousePressed(){
@@ -66,6 +64,39 @@ function mousePressed(){
 			return;
 		}
 	}
+}
+
+function autoMove(){
+
+	let targets = [];
+	for(let i=0; i<fMng.getGrids()**2; i++) targets.push(i);
+	console.log(targets);
+	for(let i=targets.length-1; 0<=i; i--){
+		let rdm = Math.floor(Math.random()*i);
+		let tmp = targets[i];
+		targets[i] = targets[rdm];
+		targets[rdm] = tmp;
+	}
+	console.log(targets);
+
+	// for(let tile of tiles){
+	// 	if(tile.num != 0) continue;
+
+	// 	let dirs = [0, 1, 2, 3];
+	// 	for(let i=dirs.length-1; 0<=i; i--){
+	// 		let rdm = Math.floor(Math.random()*i);
+	// 		let tmp = dirs[i];
+	// 		dirs[i] = dirs[rdm];
+	// 		dirs[rdm] = tmp;
+	// 	}
+	// 	console.log(tile.num);
+	// 	console.log(dirs);
+	// 	for(let i=0; i<dirs.length; i++){
+	// 		if(dirs[i] == 0){
+
+	// 		}
+	// 	}
+	// }
 }
 
 function swapTiles(fR, fC, tR, tC){

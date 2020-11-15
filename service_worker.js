@@ -1,26 +1,26 @@
 //==========
 // ServiceWorker
 
-const CACHE_VERSION = "cache_0.4.4";
+const CACHE_VERSION = "cache_0.4.6";
 const CACHE_FILES = [
-	"./index.html",
-	"./css/custom.css",
-	"./js/sketch.js",
-	"./js/utility.js",
-	"./libs/jquery/jquery.js",
-	"./libs/jquery/jquery.min.js",
-	"./libs/hammer/hammer.js",
-	"./libs/hammer/hammer.min.js",
-	"./libs/glfx/glfx.js",
-	"./libs/glfx/utility.js",
-	"./images/icons/favicon.ico",
-	"./images/icons/icon152x152.png",
-	"./images/icons/icon192x192.png",
-	"./images/icons/icon512x512.png",
-	"./images/logo512x512.png",
-	"./images/crt_body.png",
-	"./images/crt_frame.png",
-	"./images/scanline.png"
+	"./pwa/index.html",
+	"./pwa/css/custom.css",
+	"./pwa/js/sketch.js",
+	"./pwa/js/utility.js",
+	"./pwa/libs/jquery/jquery.js",
+	"./pwa/libs/jquery/jquery.min.js",
+	"./pwa/libs/hammer/hammer.js",
+	"./pwa/libs/hammer/hammer.min.js",
+	"./pwa/pwa/libs/glfx/glfx.js",
+	"./pwa/libs/glfx/utility.js",
+	"./pwa/images/icons/favicon.ico",
+	"./pwa/pwa/images/icons/icon152x152.png",
+	"./pwa/images/icons/icon192x192.png",
+	"./pwa/images/icons/icon512x512.png",
+	"./pwa/images/logo512x512.png",
+	"./pwa/images/crt_body.png",
+	"./pwa/images/crt_frame.png",
+	"./pwa/images/scanline.png"
 ];
 
 // Place files that need to be executed offline 
