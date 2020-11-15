@@ -44,9 +44,6 @@ function setup(){
 			tiles.push(new Tile(board[r][c], r, c, pad, size, corner));
 		}
 	}
-
-	// Test
-	autoMove();
 }
 
 function draw(){
@@ -60,43 +57,20 @@ function mousePressed(){
 		if(tile.contains(mouseX, mouseY)){
 			let target = fMng.checkVH(tile.r, tile.c);
 			if(target.r < 0 || target.c < 0) return;
+			fMng.pushHistory(tile.r, tile.c, target.r, target.c);
 			swapTiles(tile.r, tile.c, target.r, target.c);
 			return;
 		}
 	}
+	if(mouseX < 50 && mouseY < 50) autoMove();// Auto
 }
 
 function autoMove(){
-
-	let targets = [];
-	for(let i=0; i<fMng.getGrids()**2; i++) targets.push(i);
-	console.log(targets);
-	for(let i=targets.length-1; 0<=i; i--){
-		let rdm = Math.floor(Math.random()*i);
-		let tmp = targets[i];
-		targets[i] = targets[rdm];
-		targets[rdm] = tmp;
-	}
-	console.log(targets);
-
-	// for(let tile of tiles){
-	// 	if(tile.num != 0) continue;
-
-	// 	let dirs = [0, 1, 2, 3];
-	// 	for(let i=dirs.length-1; 0<=i; i--){
-	// 		let rdm = Math.floor(Math.random()*i);
-	// 		let tmp = dirs[i];
-	// 		dirs[i] = dirs[rdm];
-	// 		dirs[rdm] = tmp;
-	// 	}
-	// 	console.log(tile.num);
-	// 	console.log(dirs);
-	// 	for(let i=0; i<dirs.length; i++){
-	// 		if(dirs[i] == 0){
-
-	// 		}
-	// 	}
-	// }
+	let history = fMng.popHistory();
+	if(!history) return;
+	fMng.swapGrid(history.tR, history.tC, history.fR, history.fC);
+	swapTiles(history.tR, history.tC, history.fR, history.fC);
+	setTimeout(autoMove, 100);
 }
 
 function swapTiles(fR, fC, tR, tC){

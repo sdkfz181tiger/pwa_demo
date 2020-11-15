@@ -3,7 +3,7 @@
 
 const CACHE_VERSION = "cache_0.4.6";
 const CACHE_FILES = [
-	"./pwa/index.html",
+	"./index.html",
 	"./pwa/css/custom.css",
 	"./pwa/js/sketch.js",
 	"./pwa/js/utility.js",
@@ -11,10 +11,10 @@ const CACHE_FILES = [
 	"./pwa/libs/jquery/jquery.min.js",
 	"./pwa/libs/hammer/hammer.js",
 	"./pwa/libs/hammer/hammer.min.js",
-	"./pwa/pwa/libs/glfx/glfx.js",
+	"./pwa/libs/glfx/glfx.js",
 	"./pwa/libs/glfx/utility.js",
 	"./pwa/images/icons/favicon.ico",
-	"./pwa/pwa/images/icons/icon152x152.png",
+	"./pwa/images/icons/icon152x152.png",
 	"./pwa/images/icons/icon192x192.png",
 	"./pwa/images/icons/icon512x512.png",
 	"./pwa/images/logo512x512.png",

@@ -10,27 +10,41 @@ function showMsg(msg){
 //==========
 // FpzManager
 
+const D_LEFT  = 0;
+const D_RIGHT = 1;
+const D_UP    = 2;
+const D_DOWN  = 3;
+
 class FpzManager{
 
 	constructor(){
 		this._grids = 4;
-		this._board = [];
-		this.resetBoard();
-	}
-
-	resetBoard(){
 		this._board = [
 			[ 1, 2, 3, 4],
 			[ 5, 6, 7, 8],
 			[ 9,10,11,12],
 			[13,14,15, 0]
 		];
-		//this.wanderGrid(3, 3, 500);
+		this._histories = [];
+		this.wanderGrid(3, 3, -1, 100);
 	}
 
 	getGrids(){return this._grids;}
 
 	getBoard(){return this._board;}
+
+	pushHistory(fR, fC, tR, tC){
+		let history = {fR:fR, fC:fC, tR:tR, tC:tC};
+		this._histories.push(history);
+	}
+
+	popHistory(){
+		let l = this._histories.length - 1;
+		if(l < 0) return null;
+		let history = this._histories[l];
+		this._histories.splice(l, 1);
+		return history;
+	}
 
 	checkVH(r, c){
 		if(this.checkZero(r-1, c)) return this.swapGrid(r, c, r-1, c);
@@ -49,7 +63,7 @@ class FpzManager{
 		return true;
 	}
 
-	wanderGrid(r, c, cnt){
+	wanderGrid(r, c, prev, cnt){
 		if(cnt <= 0) return;
 		let dirs = [];
 		for(let i=0; i<4; i++) dirs.push(i);
@@ -61,26 +75,33 @@ class FpzManager{
 		}
 		for(let i=0; i<dirs.length; i++){
 			let dir = dirs[i];
+			let rev = -1;
+			if(prev == D_LEFT) rev = D_RIGHT;
+			if(prev == D_RIGHT) rev = D_LEFT;
+			if(prev == D_UP) rev = D_DOWN;
+			if(prev == D_DOWN) rev = D_UP;
+			if(dir == rev) continue;
 			let oR = 0;
 			let oC = 0;
-			if(dir == 0){// Left
+			if(dir == D_LEFT){
 				if(c-1<0) continue;
 				oC--;
 			}
-			if(dir == 1){// Right
+			if(dir == D_RIGHT){
 				if(this._grids-1<c+1) continue;
 				oC++;
 			}
-			if(dir == 2){// Up
+			if(dir == D_UP){
 				if(r-1<0) continue;
 				oR--;
 			}
-			if(dir == 3){// Down
+			if(dir == D_DOWN){
 				if(this._grids-1<r+1) continue;
 				oR++;
 			}
+			this._histories.push({fR:r, fC:c, tR:r+oR, tC:c+oC});
 			this.swapGrid(r, c, r+oR, c+oC);
-			this.wanderGrid(r+oR, c+oC, cnt-1);
+			this.wanderGrid(r+oR, c+oC, dir, cnt-1);
 			return;
 		}
 	}
