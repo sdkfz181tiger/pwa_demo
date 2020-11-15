@@ -12,6 +12,16 @@ const F_COLOR = [
 	"#333", "#333", "#333", "#333", "#FFF", "#FFF"];
 
 let fMng, sX, sY, tiles;
+let yukkuri;
+
+function preload(){
+	let rdm = Math.random() * 2;
+	if(rdm < 1){
+		yukkuri = loadImage("./images/y_reimu.png");
+	}else{
+		yukkuri = loadImage("./images/y_marisa.png");
+	}
+}
 
 function setup(){
 	createCanvas(windowWidth, windowHeight);
@@ -133,14 +143,17 @@ class Tile{
 			this._x += (this._dX - this._x) / 2;
 			this._y += (this._dY - this._y) / 2;
 		}
-		if(this._num == 0) return;
-		let i = Math.floor(this._num%T_COLOR.length);
-		// Background
-		noStroke(); fill(T_COLOR[i]);
-		square(this._x, this._y, this._size, this._size, this._corner);
-		// Font
-		fill(F_COLOR[i]); textSize(this._size*0.5); textAlign(CENTER);
-		text(this._num, this._x+this._size/2, this._y+this._size*0.7);
+		if(this._num != 0){
+			let i = Math.floor(this._num%T_COLOR.length);
+			// Background
+			noStroke(); fill(T_COLOR[i]);
+			square(this._x, this._y, this._size, this._size, this._corner);
+			// Font
+			fill(F_COLOR[i]); textSize(this._size*0.5); textAlign(CENTER);
+			text(this._num, this._x+this._size/2, this._y+this._size*0.7);
+		}else{
+			image(yukkuri, this._x, this._y, this._size, this._size);
+		}
 	}
 
 	calcDistance(){
