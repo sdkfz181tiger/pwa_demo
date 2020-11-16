@@ -17,9 +17,9 @@ let yukkuri;
 function preload(){
 	let rdm = Math.random() * 2;
 	if(rdm < 1){
-		yukkuri = loadImage("./images/y_reimu.png");
+		yukkuri = loadImage("./images/y_reimu_350x350.png");
 	}else{
-		yukkuri = loadImage("./images/y_marisa.png");
+		yukkuri = loadImage("./images/y_marisa_350x350.png");
 	}
 }
 
