@@ -16,10 +16,15 @@ const RAD_TO_DEG = 180 / Math.PI;
 const REF_H = 180;
 const REF_V = 90;
 
-const COLORS = [
+const RAINBOW = [
 	"#FFFFFF", "#F44336", "#E91E63", "#9C27B0", "#673Ab7", "#3F51B5", 
 	"#2196F3", "#03A9f4", "#00BCD4", "#009688", "#4CAF50", "#8BC34A", 
 	"#CDDC39", "#FFEB3B", "#FFC107", "#FF9800", "#FF5722", "#795548"];
+
+const COLORS = [
+	"#FFFFFF", "#EEEEEE", "#DDDDDD", "#CCCCCC", "#BBBBBB", "#AAAAAA", 
+	"#999999", "#888888", "#777777", "#666666", "#555555", "#444444", 
+	"#333333", "#222222", "#111111", "#000000"];
 
 class Vec2{
 
@@ -38,7 +43,7 @@ class Ball{
 
 	constructor(x, y, size=8, color="#FFFFFF"){
 		this._pos   = new Vec2(x, y);
-		this._vel   = new Vec2(-8, -4);
+		this._vel   = new Vec2(0, 0);
 		this._size  = size;
 		this._color = color;
 		this._ref   = null;
@@ -49,7 +54,10 @@ class Ball{
 	set x(n){this._pos.x = n;}
 	set y(n){this._pos.y = n;}
 
-	setSpeed(x, y){
+	setSpeed(speed, deg){
+		let rad = DEG_TO_RAD * deg;
+		let x = speed * Math.cos(rad);
+		let y = speed * Math.sin(rad);
 		this._vel.x = x;
 		this._vel.y = y;
 	}
@@ -93,28 +101,28 @@ class Ball{
 		if(this.checkCross(this._pos.x, this._pos.y, preX, preY,
 			target.x, target.y, target.x+target.w, target.y)){
 			//console.log("top");
-			this._pos.y = target.y;
+			this._pos.y = target.y-1;
 			this._ref   = REF_V;// Vertical
 			return true;
 		}
 		if(this.checkCross(this.x, this.y, preX, preY,
 			target.x, target.y+target.h, target.x+target.w, target.y+target.h)){
 			//console.log("bottom");
-			this._pos.y = target.y+target.h;
+			this._pos.y = target.y+target.h+1;
 			this._ref   = REF_V;// Vertical
 			return true;
 		}
 		if(this.checkCross(this.x, this.y, preX, preY,
 			target.x, target.y, target.x, target.y+target.h)){
 			//console.log("left");
-			this._pos.x = target.x;
+			this._pos.x = target.x-1;
 			this._ref   = REF_H;// Horizontal
 			return true;
 		}
 		if(this.checkCross(this.x, this.y, preX, preY,
 			target.x+target.w, target.y, target.x+target.w, target.y+target.h)){
 			//console.log("right");
-			this._pos.x = target.x+target.w;
+			this._pos.x = target.x+target.w+1;
 			this._ref   = REF_H;// Horizontal
 			return true;
 		}
@@ -133,7 +141,7 @@ class Ball{
 		if(this._ref == null) return false;
 		if(this._ref == REF_H) this._vel.x *= -1;
 		if(this._ref == REF_V) this._vel.y *= -1;
-		this._ref = null;
+		this._ref = null;// Reset
 		return true;
 	}
 
@@ -181,12 +189,12 @@ class Paddle{
 
 class Block{
 
-	constructor(x, y, w, h, color="#FFFFFF"){
+	constructor(x, y, w, h){
 		this._x     = x;
 		this._y     = y;
-		this._w     = w;
-		this._h     = h;
-		this._color = color;
+		this._w     = w + 1;
+		this._h     = h + 1;
+		this._life  = 10;
 	}
 
 	get x(){return this._x;}
@@ -196,8 +204,13 @@ class Block{
 	set x(n){this._pos.x = n;}
 	set y(n){this._pos.y = n;}
 
+	damage(){
+		this._life--;// Life
+		return this._life <= 0;
+	}
+
 	draw(){
-		fill(this._color);
+		fill(COLORS[this._life]);
 		rect(this._x, this._y, this._w, this._h);
 	}
 }
