@@ -16,16 +16,16 @@ function setup(){
 	let bH = height*0.5 / (ROWS+2);
 	let sX = width*0.5 - bW*COLS*0.5;
 	let sY = (ROWS+2)*bH;
-	let bS = (bW<bH) ? bW*0.5:bH*0.5;
 
 	// Paddle
 	paddle = new Paddle(width*0.5-bW*0.5, height-bH*3.0, bW, bH);
 	// Balls
 	balls = [];
 	for(let b=0; b<30; b++){
-		let spd = 5;
+		let size = (bH<bW) ? bH*0.5:bW*0.5;
+		let spd = 10;
 		let deg = b * 5 + 220;
-		let ball = new Ball(width*0.5, height*0.8, width*0.015);
+		let ball = new Ball(width*0.5, height*0.8, size);
 		ball.setSpeed(spd, deg);
 		balls.push(ball); 
 	}
