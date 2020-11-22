@@ -2,9 +2,8 @@
 //==========
 // JavaScript
 
-const ROWS    = 17;
-const COLS    = 7;
-const BLOCK_P = 10;
+const ROWS    = 12;
+const COLS    = 10;
 
 let ball, paddle, blocks;
 
@@ -20,7 +19,7 @@ function setup(){
 	let bS = (bW<bH) ? bW*0.5:bH*0.5;
 
 	// Ball
-	ball = new Ball(width*0.5, height*0.8, bS);
+	ball = new Ball(width*0.5, height*0.8, width*0.02);
 	// Paddle
 	paddle = new Paddle(width*0.5-bW*0.5, height-bH*3.0, bW, bH);
 	// Block
@@ -48,17 +47,22 @@ function draw(){
 
 	// x Paddle
 	paddle.draw();
-	if(ball.intersects(paddle)) ball.bounce(paddle);
+	if(ball.intersects(paddle)){
+		if(ball.shutout(paddle)) ball.bounce(paddle);
+	}
 
 	// x Block
+	let last = -1;
 	for(let block of blocks) block.draw();
 	for(let i=blocks.length-1; 0<=i; i--){
 		let block = blocks[i];
 		if(!ball.intersects(block)) continue;
-		if(!ball.bounce(block)) continue;
-		blocks.splice(i, 1);// Splice
-		break;
+		if(!ball.shutout(block)) continue;
+		last = i;// Last block
+		i = blocks.length-1;// Loop
 	}
+	// Remove
+	if(ball.bounce() && last != -1) blocks.splice(last, 1);
 }
 
 function mousePressed(){

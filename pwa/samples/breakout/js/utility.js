@@ -13,6 +13,9 @@ function showMsg(msg){
 const DEG_TO_RAD = Math.PI / 180;
 const RAD_TO_DEG = 180 / Math.PI;
 
+const REF_H = 180;
+const REF_V = 90;
+
 const COLORS = [
 	"#FFFFFF", "#F44336", "#E91E63", "#9C27B0", "#673Ab7", "#3F51B5", 
 	"#2196F3", "#03A9f4", "#00BCD4", "#009688", "#4CAF50", "#8BC34A", 
@@ -38,12 +41,18 @@ class Ball{
 		this._vel   = new Vec2(-8, -4);
 		this._size  = size;
 		this._color = color;
+		this._ref   = null;
 	}
 
 	get x(){return this._pos.x;}
 	get y(){return this._pos.y;}
 	set x(n){this._pos.x = n;}
 	set y(n){this._pos.y = n;}
+
+	setSpeed(x, y){
+		this._vel.x = x;
+		this._vel.y = y;
+	}
 
 	bounceWalls(l, r, t, b){
 		if(this._pos.x < l){
@@ -76,7 +85,7 @@ class Ball{
 		return true;
 	}
 
-	bounce(target){
+	shutout(target){
 		let preX = this._pos.x - this._vel.x*2;
 		let preY = this._pos.y - this._vel.y*2;
 		line(this._pos.x, this._pos.y, preX, preY);
@@ -85,28 +94,28 @@ class Ball{
 			target.x, target.y, target.x+target.w, target.y)){
 			//console.log("top");
 			this._pos.y = target.y;
-			this._vel.y *= -1;
+			this._ref   = REF_V;// Vertical
 			return true;
 		}
 		if(this.checkCross(this.x, this.y, preX, preY,
 			target.x, target.y+target.h, target.x+target.w, target.y+target.h)){
 			//console.log("bottom");
 			this._pos.y = target.y+target.h;
-			this._vel.y *= -1;
+			this._ref   = REF_V;// Vertical
 			return true;
 		}
 		if(this.checkCross(this.x, this.y, preX, preY,
 			target.x, target.y, target.x, target.y+target.h)){
 			//console.log("left");
 			this._pos.x = target.x;
-			this._vel.x *= -1;
+			this._ref   = REF_H;// Horizontal
 			return true;
 		}
 		if(this.checkCross(this.x, this.y, preX, preY,
 			target.x+target.w, target.y, target.x+target.w, target.y+target.h)){
 			//console.log("right");
 			this._pos.x = target.x+target.w;
-			this._vel.x *= -1;
+			this._ref   = REF_H;// Horizontal
 			return true;
 		}
 		return false;
@@ -118,6 +127,14 @@ class Ball{
 		let c = (aX-bX)*(cY-aY)+(aY-bY)*(aX-cX);
 		let d = (aX-bX)*(dY-aY)+(aY-bY)*(aX-dX);
 		return a*b<0 && c*d<0;
+	}
+
+	bounce(){
+		if(this._ref == null) return false;
+		if(this._ref == REF_H) this._vel.x *= -1;
+		if(this._ref == REF_V) this._vel.y *= -1;
+		this._ref = null;
+		return true;
 	}
 
 	draw(){
