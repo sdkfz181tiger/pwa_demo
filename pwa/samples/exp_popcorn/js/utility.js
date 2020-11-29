@@ -53,8 +53,9 @@ class Ball{
 	reflect(x, y, rad){
 		this._pos.x = x;
 		this._pos.y = y;
-		this._vel.x = this._vel.magnitude * Math.cos(rad);
-		this._vel.y = this._vel.magnitude * Math.sin(rad);
+		let mag = this._vel.magnitude;
+		this._vel.x = mag * Math.cos(rad);
+		this._vel.y = mag * Math.sin(rad);
 	}
 
 	bounceWalls(l, r, t, b){
