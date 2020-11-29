@@ -144,16 +144,18 @@ class Paddle{
 
 class Block{
 
-	constructor(x, y, w, h){
+	constructor(x, y, w, h, arr){
 		this._x = x;
 		this._y = y;
-		this._w = w;
-		this._h = h;
-		this._pts = [
-			new Vec2(x, y),
-			new Vec2(x+w, y),
-			new Vec2(x, y+h)
-		];
+		this._w = w + 2;
+		this._h = h + 2;
+		this._pts = [];
+		for(let pts of arr){
+			let x = this._x + pts[0] * this._w;
+			let y = this._y + pts[1] * this._h;
+			let vec = new Vec2(x, y);
+			this._pts.push(vec);
+		}
 	}
 
 	get x(){return this._x;}
