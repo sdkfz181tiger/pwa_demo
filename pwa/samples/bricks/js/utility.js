@@ -37,6 +37,7 @@ class Ball{
 
 	constructor(x, y, size=8, color="#FFFFFF"){
 		this._pos   = new Vec2(x, y);
+		this._pre   = new Vec2(x, y);
 		this._vel   = new Vec2(0, 0);
 		this._size  = size;
 		this._color = color;
@@ -45,6 +46,8 @@ class Ball{
 
 	get x(){return this._pos.x;}
 	get y(){return this._pos.y;}
+	get preX(){return this._pre.x;}
+	get preY(){return this._pre.y;}
 	get vX(){return this._vel.x;}
 	get vY(){return this._vel.y;}
 	set x(n){this._pos.x = n;}
@@ -98,44 +101,12 @@ class Ball{
 	}
 
 	draw(){
+		this._pre.x = this._pos.x;
+		this._pre.y = this._pos.y;
 		this._pos.x += this._vel.x;
 		this._pos.y += this._vel.y;
 		fill(this._color);
 		circle(this._pos.x, this._pos.y, this._size);
-	}
-}
-
-class Paddle{
-
-	constructor(x, y, w, h, color="#FFFFFF"){
-		this._x     = x;
-		this._y     = y;
-		this._w     = w;
-		this._h     = h;
-		this._color = color;
-		this._tX    = x;
-		this._tY    = y;
-	}
-
-	get x(){return this._x;}
-	get y(){return this._y;}
-	get w(){return this._w;}
-	get h(){return this._h;}
-	set x(n){this._pos.x = n;}
-	set y(n){this._pos.y = n;}
-
-	moveTo(tX, tY){
-		this._tX = tX - this._w*0.5;
-		this._tY = tY;
-	}
-
-	draw(){
-		let dX = this._tX - this._x;
-		let dY = this._tY - this._y;
-		this._x += dX * 0.5;
-		this._y += dY * 0.5;
-		fill(this._color);
-		rect(this._x, this._y, this._w, this._h);
 	}
 }
 
@@ -147,8 +118,8 @@ class Block{
 	constructor(x, y, w, h, arr){
 		this._x = x;
 		this._y = y;
-		this._w = w + 2;
-		this._h = h + 2;
+		this._w = w;
+		this._h = h;
 		this._pts = [];
 		for(let pts of arr){
 			let x = this._x + pts[0] * this._w;
@@ -166,6 +137,8 @@ class Block{
 	set y(n){this._y = n;}
 
 	draw(){
+		noFill();
+		stroke(255);
 		for(let i=0; i<this._pts.length; i++){
 			let n = (i < this._pts.length-1) ? i+1 : 0;
 			let aX = this._pts[i].x;
@@ -204,9 +177,8 @@ class Block{
 	}
 
 	crosses(ball){
-		let preX = ball.x - ball.vX;
-		let preY = ball.y - ball.vY;
-		let pD = Math.floor(360/this._pts.length);
+		let preX = ball.preX;
+		let preY = ball.preY;
 		for(let i=0; i<this._pts.length; i++){
 			let n = (i < this._pts.length-1) ? i+1 : 0;
 			let aX = this._pts[i].x;
@@ -215,6 +187,9 @@ class Block{
 			let bY = this._pts[n].y;
 			if(checkCross(aX, aY, bX, bY, preX, preY, ball.x, ball.y)){
 				let ref = calcCross(aX, aY, bX, bY, preX, preY, ball.x, ball.y);
+				line(ball.x, ball.y, preX, preY);
+				circle(ref.x, ref.y, 5);
+				console.log(ref);
 				ball.reflect(ref.x, ref.y, ref.rad);
 				return;
 			}
