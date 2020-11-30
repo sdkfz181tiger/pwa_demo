@@ -2,57 +2,48 @@
 //==========
 // JavaScript
 
-const tBox = [[0,0],[1,0],[1,1],[0,1]];
-const tTrA = [[0,0],[1,1],[0,1]];
-const tTrB = [[0,0],[1,0],[0,1]];
-const tTrC = [[0,0],[1,0],[1,1]];
-const tTrD = [[1,0],[1,1],[0,1]];
-
-const types = [
-	[null, tTrC, tBox, tBox, null, null],
-	[tTrD, null, tBox, tBox, null, tTrA],
-	[tBox, null, tTrC, tTrB, null, tBox],
-	[tBox, null, null, null, null, tBox],
-	[tTrC, tTrA, null, null, tTrD, tTrB],
+const ptns = [
+	[[1,0],[1,1],[0,1]],
+	[[1,0],[2,0],[2,1],[1,1]],
+	[[2,0],[3,1],[2,1]],
+	[[0,2],[1,2],[1,3]],
+	[[1,2],[2,2],[2,3],[1,3]],
+	[[2,2],[3,2],[2,3]]
 ];
 
-let balls, blocks;
+let balls, tris;
+let tMinX, tMaxX;
+let tMinY, tMaxY;
 
 function setup(){
 	createCanvas(windowWidth, windowHeight);
-	frameRate(48);
+	frameRate(32);
 	showMsg("setup");
 
-	const rows = types.length;
-	const cols = types[0].length;
+	const tRows = 3;
+	const tCols = 3;
+	const tSize = width / 9;
+	const tX = width*0.5 - tSize*tCols*0.5;
+	const tY = height*0.5 - tSize*tRows*0.5;
 
-	let bW = width / 9;
-	let bH = bW;
-	let sX = width*0.5 - bW*cols*0.5;
-	let sY = height*0.5;
+	tMinX = tX;
+	tMaxX = tX + tSize * tCols;
+	tMinY = tY;
+	tMaxY = tY + tSize * tRows;
 
 	// Balls
 	balls = [];
-	for(let i=0; i<1; i++){
-		let size = 4;
-		let spd  = 4;
-		let deg  = i + 180;
-		let ball = new Ball(width*0.5+100, 120, size);
-		ball.setSpeed(spd, deg);
+	for(let i=180; i<360; i+=4){
+		let ball = new Ball(width*0.5, height-30, 6);
+		ball.setSpeed(8, i);
 		balls.push(ball); 
 	}
 
-	// Block
-	blocks = [];
-	for(let r=rows-1; 0<=r; r--){
-		for(let c=0; c<cols; c++){
-			let x = sX + c * bW;
-			let y = sY - (rows-r) * bW;
-			let type = types[r][c];
-			if(type == null) continue;
-			let block = new Block(x, y, bW, bH, type);
-			blocks.push(block);
-		}
+	// Triangles
+	tris = [];
+	for(let ptn of ptns){
+		let tri = new Triangle(tX, tY, tSize, ptn);
+		tris.push(tri);
 	}
 }
 
@@ -61,28 +52,30 @@ function draw(){
 	stroke(200); strokeWeight(2); fill(33);
 
 	// Intersect
-	for(let a=0; a<balls.length; a++){
-		let cnt = 0;
-		for(let b=0; b<blocks.length; b++){
-			if(blocks[b].intersects(balls[a])){
-				cnt++;
-				if(100 < cnt){
-					console.log("Too much!!", b);
-					break;
-				}
-				b = 0;
-			}
-		}
-	}
-	// Blocks
-	for(let block of blocks) block.draw();
-	// Balls
-	for(let ball of balls){
-		ball.bounceWalls(0, width, 0, height);// x Wall
+	for(let i=0; i<balls.length; i++){
+		let ball = balls[i];
+		bounceWalls(ball);// x Walls
+		bounceTriangles(ball);// x Triangles
 		ball.draw();
+	}
+	// Triangles
+	for(let tri of tris) tri.draw();
+}
+
+function bounceWalls(ball){
+	ball.bounceWalls(0, width, 0, height);
+}
+
+function bounceTriangles(ball){
+	if(ball.x < tMinX) return;
+	if(tMaxX < ball.x) return;
+	if(ball.y < tMinY) return;
+	if(tMaxY < ball.y) return;
+	for(let t=0; t<tris.length; t++){
+		tris[t].intersects(ball);
 	}
 }
 
 function mousePressed(){
-	draw();
+	
 }

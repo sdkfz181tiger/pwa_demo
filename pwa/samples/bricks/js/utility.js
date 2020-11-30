@@ -111,21 +111,19 @@ class Ball{
 }
 
 //==========
-// Block
+// Triangle
 
-class Block{
+class Triangle{
 
-	constructor(x, y, w, h, arr){
+	constructor(x, y, tSize, tArr){
 		this._x = x;
 		this._y = y;
-		this._w = w;
-		this._h = h;
+		this._tSize = tSize;
 		this._pts = [];
-		for(let pts of arr){
-			let x = this._x + pts[0] * this._w;
-			let y = this._y + pts[1] * this._h;
-			let vec = new Vec2(x, y);
-			this._pts.push(vec);
+		for(let i=0; i<tArr.length; i++){
+			let tX = x + tSize * tArr[i][0];
+			let tY = y + tSize * tArr[i][1];
+			this._pts.push(new Vec2(tX, tY));
 		}
 	}
 
@@ -145,6 +143,8 @@ class Block{
 			let aY = this._pts[i].y;
 			let bX = this._pts[n].x;
 			let bY = this._pts[n].y;
+			circle(aX, aY, 4);
+			stroke(255);
 			line(aX, aY, bX, bY);
 		}
 	}
@@ -186,11 +186,8 @@ class Block{
 			let bX = this._pts[n].x;
 			let bY = this._pts[n].y;
 			if(checkCross(aX, aY, bX, bY, preX, preY, ball.x, ball.y)){
-				let ref = calcCross(aX, aY, bX, bY, preX, preY, ball.x, ball.y);
-				line(ball.x, ball.y, preX, preY);
-				circle(ref.x, ref.y, 5);
-				console.log(ref);
-				ball.reflect(ref.x, ref.y, ref.rad);
+				let rad = calcReflection(aX, aY, bX, bY, preX, preY, ball.x, ball.y);
+				ball.reflect(preX, preY, rad);
 				return;
 			}
 		}
@@ -271,7 +268,7 @@ function checkCross(aX, aY, bX, bY, cX, cY, dX, dY){
 	return a*b<0 && c*d<0;
 }
 
-function calcCross(aX, aY, bX, bY, cX, cY, dX, dY){
+function calcReflection(aX, aY, bX, bY, cX, cY, dX, dY){
 	let dev   = (bY-aY)*(dX-cX)-(bX-aX)*(dY-cY);
 	let d1    = cY*dX-cX*dY;
 	let d2    = aY*bX-aX*bY;
@@ -285,7 +282,5 @@ function calcCross(aX, aY, bX, bY, cX, cY, dX, dY){
 	let vRay  = new Vec2(cX-pX, cY-pY);
 	let radR  = Math.atan2(vRay.y, vRay.x);
 	let radV  = radR + (radU-radR)*2;
-	let vX    = pX + dist * Math.cos(radV);
-	let vY    = pY + dist * Math.sin(radV);
-	return {x:vX, y:vY, rad:radV};
+	return radV;
 }
