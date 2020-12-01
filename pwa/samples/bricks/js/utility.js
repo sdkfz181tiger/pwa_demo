@@ -106,7 +106,96 @@ class Ball{
 		this._pos.x += this._vel.x;
 		this._pos.y += this._vel.y;
 		fill(this._color);
+		noStroke();
 		circle(this._pos.x, this._pos.y, this._size);
+	}
+}
+
+//==========
+// Slidebar
+
+class Slidebar{
+
+	constructor(x, y, w, h){
+		this._x  = x;
+		this._y  = y;
+		this._w  = w;
+		this._h  = h;
+		this._hX = this._x;
+		this._hY = this._y;
+		this._hSize = h * 2.0;
+		this._hFlg = false;
+	}
+
+	get hX(){return this._hX;}
+	get hY(){return this._hY;}
+	get isHandling(){return this._hFlg;}
+	get percent(){
+		let n = (this._hX-this._x)/(this._w*0.5);
+		return floor(n*100)/100;
+	}
+
+	touchBegan(x, y){
+		if(x<this._hX-this._hSize*0.5) return;
+		if(this._hX+this._hSize*0.5<x) return;
+		if(y<this._hY-this._hSize*0.5) return;
+		if(this._hY+this._hSize*0.5<y) return;
+		if(this._hFlg) return;
+		this._hFlg = true;
+	}
+
+	touchMoved(x, y){
+		if(!this._hFlg) return;
+		this._hX = x;
+		this._hY = this._y;
+		let min = this._x - this._w*0.5;
+		let max = this._x + this._w*0.5;
+		if(this._hX < min) this._hX = min;
+		if(max < this._hX) this._hX = max;
+	}
+
+	touchEnded(x, y){
+		if(!this._hFlg) return;
+		this._hFlg = false;
+	}
+
+	draw(){
+		noStroke();
+		fill(99);
+		rect(this._x, this._y, this._w, this._h);
+		fill(255);
+		square(this._hX, this._y, this._hSize);
+	}
+}
+
+//==========
+// Guideline
+
+class Guideline{
+
+	constructor(x, y, min=0, max=360){
+		this._x   = x;
+		this._y   = y;
+		this._min = 181;
+		this._max = 359;
+		this.setDeg(0);
+	}
+
+	setDeg(percent){
+		let p = (this._max-this._min)*0.5;
+		let c = this._min + p;
+		let d = c + p * percent;
+		if(d < this._min) d = this._min;
+		if(this._max < d) d = this._max;
+		this._deg = floor(d);
+	}
+
+	draw(){
+		noFill();
+		stroke(200);
+		let x = this._x + TBL_COS[this._deg]*100;
+		let y = this._y + TBL_SIN[this._deg]*100;
+		line(this._x, this._y, x, y);
 	}
 }
 
@@ -136,15 +225,13 @@ class Triangle{
 
 	draw(){
 		noFill();
-		stroke(255);
+		stroke(200);
 		for(let i=0; i<this._pts.length; i++){
 			let n = (i < this._pts.length-1) ? i+1 : 0;
 			let aX = this._pts[i].x;
 			let aY = this._pts[i].y;
 			let bX = this._pts[n].x;
 			let bY = this._pts[n].y;
-			circle(aX, aY, 4);
-			stroke(255);
 			line(aX, aY, bX, bY);
 		}
 	}

@@ -10,12 +10,17 @@ const D = [[1,0],[1,1],[0,1]];
 const X = null;
 
 const ptns = [
-	[X, D, A, X],
-	[D, O, O, A],
-	[O, B, C, O],
-	[C, X, X, B]
+	[O, X, D, A],
+	[C, A, C, A],
+	[D, B, D, B],
+	[O, A, C, O],
+	[C, B, X, C],
+	[X, X, X, X],
+	[X, X, X, X],
+	[X, X, X, X]
 ];
 
+let sBar, gLine;
 let balls, tris;
 let tMinX, tMaxX;
 let tMinY, tMaxY;
@@ -23,11 +28,12 @@ let tMinY, tMaxY;
 function setup(){
 	createCanvas(windowWidth, windowHeight);
 	frameRate(32);
+	rectMode(CENTER);
 	showMsg("setup");
 
 	const tRows = ptns.length;
 	const tCols = ptns[0].length;
-	const tSize = width / 9;
+	const tSize = width / 10;
 	const tX = width*0.5 - tSize*tCols*0.5;
 	const tY = height*0.5 - tSize*tRows*0.5;
 
@@ -36,11 +42,16 @@ function setup(){
 	tMinY = tY;
 	tMaxY = tY + tSize * tRows;
 
+	// Slidebar, Guideline
+	sBar = new Slidebar(width*0.5, height-40, width*0.2, width*0.02);
+	gLine = new Guideline(width*0.5, height-60);
+
 	// Balls
 	balls = [];
-	for(let i=180; i<360; i+=1){
-		let ball = new Ball(width*0.75, height*0.75, 6);
-		ball.setSpeed(8, i);
+	for(let i=180; i<270; i+=3){
+		if(i%45==0) continue;
+		let ball = new Ball(width*0.5, height*0.75, 4);
+		ball.setSpeed(2, i);
 		balls.push(ball); 
 	}
 
@@ -60,7 +71,11 @@ function setup(){
 
 function draw(){
 	background(0);
-	stroke(200); strokeWeight(2); fill(33);
+	stroke(200); strokeWeight(1); fill(33);
+
+	// Slidebar
+	sBar.draw();
+	gLine.draw();
 
 	// Intersect
 	for(let i=0; i<balls.length; i++){
@@ -88,5 +103,19 @@ function bounceTriangles(ball){
 }
 
 function mousePressed(){
-	
+	if(!sBar) return;
+	sBar.touchBegan(mouseX, mouseY);
+}
+
+function mouseDragged(){
+	if(!sBar) return;
+	sBar.touchMoved(mouseX, mouseY);
+	if(sBar.isHandling){
+		gLine.setDeg(sBar.percent);
+	}
+}
+
+function mouseReleased(){
+	if(!sBar) return;
+	sBar.touchEnded(mouseX, mouseY);
 }
