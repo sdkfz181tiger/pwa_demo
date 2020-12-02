@@ -27,7 +27,7 @@ let tMinY, tMaxY;
 
 function setup(){
 	createCanvas(windowWidth, windowHeight);
-	frameRate(32);
+	frameRate(60);
 	rectMode(CENTER);
 	showMsg("setup");
 
@@ -44,11 +44,11 @@ function setup(){
 
 	// Slidebar, Guideline
 	sBar = new Slidebar(width*0.5, height-40, width*0.2, width*0.02);
-	gLine = new Guideline(width*0.5, height-60);
+	gLine = new Guideline(width*0.45, height-60);
 
 	// Balls
 	balls = [];
-	for(let i=180; i<270; i+=3){
+	for(let i=180; i<270; i+=30){
 		if(i%45==0) continue;
 		let ball = new Ball(width*0.5, height*0.75, 4);
 		ball.setSpeed(2, i);
@@ -76,6 +76,7 @@ function draw(){
 	// Slidebar
 	sBar.draw();
 	gLine.draw();
+	drawDummy();// Dummy
 
 	// Intersect
 	for(let i=0; i<balls.length; i++){
@@ -86,6 +87,17 @@ function draw(){
 	}
 	// Triangles
 	for(let tri of tris) tri.draw();
+}
+
+function drawDummy(){
+	let ball = new Ball(gLine.x, gLine.y, 4);
+	ball.setSpeed(4, gLine.deg);
+	for(let i=0; i<90; i++){
+		for(let t=0; t<tris.length; t++){
+			tris[t].intersects(ball);
+		}
+		ball.draw();
+	}
 }
 
 function bounceWalls(ball){
@@ -111,7 +123,7 @@ function mouseDragged(){
 	if(!sBar) return;
 	sBar.touchMoved(mouseX, mouseY);
 	if(sBar.isHandling){
-		gLine.setDeg(sBar.percent);
+		gLine.setPercent(sBar.percent);
 	}
 }
 

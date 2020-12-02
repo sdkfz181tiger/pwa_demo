@@ -178,10 +178,15 @@ class Guideline{
 		this._y   = y;
 		this._min = 181;
 		this._max = 359;
-		this.setDeg(0);
+		this._deg = 0;
+		this.setPercent(0);
 	}
 
-	setDeg(percent){
+	get x(){return this._x;}
+	get y(){return this._y;}
+	get deg(){return this._deg;}
+
+	setPercent(percent){
 		let p = (this._max-this._min)*0.5;
 		let c = this._min + p;
 		let d = c + p * percent;
@@ -193,8 +198,8 @@ class Guideline{
 	draw(){
 		noFill();
 		stroke(200);
-		let x = this._x + TBL_COS[this._deg]*100;
-		let y = this._y + TBL_SIN[this._deg]*100;
+		let x = this._x + TBL_COS[this._deg]*30;
+		let y = this._y + TBL_SIN[this._deg]*30;
 		line(this._x, this._y, x, y);
 	}
 }
