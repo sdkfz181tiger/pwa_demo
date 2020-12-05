@@ -17,7 +17,7 @@ const ptns = [
 	[O, A, X, C, O],
 	[C, O, X, X, C],
 	[X, B, X, X, D],
-	[X, X, X, X, O],
+	[X, X, X, X, X],
 	[X, X, X, X, X]
 ];
 
@@ -89,6 +89,7 @@ function drawDummy(){
 	let ball = new Ball(gLine.x, gLine.y, 2);
 	ball.setSpeed(BALL_SPD, gLine.deg);
 	for(let i=0; i<90; i++){
+		ball.bounceWalls(0, width, 0, height);
 		for(let t=0; t<tris.length; t++){
 			tris[t].intersects(ball);
 		}
@@ -98,7 +99,7 @@ function drawDummy(){
 
 function shotBall(){
 	// Splice
-	if(30 < balls.length) balls.splice(0, 1);
+	if(10 < balls.length) balls.splice(0, 1);
 
 	let x = gLine.x;
 	let y = gLine.y;
@@ -106,7 +107,7 @@ function shotBall(){
 	ball.setSpeed(BALL_SPD, gLine.deg);
 	balls.push(ball); 
 
-	setTimeout(shotBall, 100);// Recursive
+	setTimeout(shotBall, 1000);// Recursive
 }
 
 function bounceWalls(ball){
