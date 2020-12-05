@@ -8,22 +8,23 @@ const B = [[0,0],[1,0],[0,1]];
 const C = [[0,0],[1,0],[1,1]];
 const D = [[1,0],[1,1],[0,1]];
 const X = null;
+const BALL_SPD = 4;
 
 const ptns = [
-	[O, X, D, A],
-	[C, A, C, A],
-	[D, B, D, B],
-	[O, A, C, O],
-	[C, B, X, C],
-	[X, X, X, X],
-	[X, X, X, X],
-	[X, X, X, X]
+	[O, B, X, D, A],
+	[C, A, X, C, A],
+	[D, O, B, D, B],
+	[O, A, X, C, O],
+	[C, O, X, X, C],
+	[X, B, X, X, D],
+	[X, X, X, X, O],
+	[X, X, X, X, X]
 ];
 
-let sBar, gLine;
-let balls, tris;
 let tMinX, tMaxX;
 let tMinY, tMaxY;
+let sBar, gLine;
+let tris, balls;
 
 function setup(){
 	createCanvas(windowWidth, windowHeight);
@@ -33,7 +34,7 @@ function setup(){
 
 	const tRows = ptns.length;
 	const tCols = ptns[0].length;
-	const tSize = width / 10;
+	const tSize = (width<height) ? width/10:height/10;
 	const tX = width*0.5 - tSize*tCols*0.5;
 	const tY = height*0.5 - tSize*tRows*0.5;
 
@@ -43,17 +44,8 @@ function setup(){
 	tMaxY = tY + tSize * tRows;
 
 	// Slidebar, Guideline
-	sBar = new Slidebar(width*0.5, height-40, width*0.2, width*0.02);
-	gLine = new Guideline(width*0.45, height-60);
-
-	// Balls
-	balls = [];
-	for(let i=180; i<270; i+=30){
-		if(i%45==0) continue;
-		let ball = new Ball(width*0.5, height*0.75, 4);
-		ball.setSpeed(2, i);
-		balls.push(ball); 
-	}
+	sBar = new Slidebar(width*0.5, height-40, width*0.2, tSize*0.2);
+	gLine = new Guideline(width*0.5, height*0.5+tSize*3);
 
 	// Triangles
 	tris = [];
@@ -67,6 +59,10 @@ function setup(){
 			tris.push(tri);
 		}
 	}
+
+	// Balls
+	balls = [];
+	setTimeout(shotBall, 200);
 }
 
 function draw(){
@@ -90,14 +86,27 @@ function draw(){
 }
 
 function drawDummy(){
-	let ball = new Ball(gLine.x, gLine.y, 4);
-	ball.setSpeed(4, gLine.deg);
+	let ball = new Ball(gLine.x, gLine.y, 2);
+	ball.setSpeed(BALL_SPD, gLine.deg);
 	for(let i=0; i<90; i++){
 		for(let t=0; t<tris.length; t++){
 			tris[t].intersects(ball);
 		}
 		ball.draw();
 	}
+}
+
+function shotBall(){
+	// Splice
+	if(30 < balls.length) balls.splice(0, 1);
+
+	let x = gLine.x;
+	let y = gLine.y;
+	let ball = new Ball(x, y, 8);
+	ball.setSpeed(BALL_SPD, gLine.deg);
+	balls.push(ball); 
+
+	setTimeout(shotBall, 100);// Recursive
 }
 
 function bounceWalls(ball){

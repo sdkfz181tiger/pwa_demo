@@ -173,12 +173,12 @@ class Slidebar{
 
 class Guideline{
 
-	constructor(x, y, min=0, max=360){
+	constructor(x, y){
 		this._x   = x;
 		this._y   = y;
+		this._deg = 0;
 		this._min = 181;
 		this._max = 359;
-		this._deg = 0;
 		this.setPercent(0);
 	}
 
@@ -197,7 +197,7 @@ class Guideline{
 
 	draw(){
 		noFill();
-		stroke(200);
+		stroke(99);
 		let x = this._x + TBL_COS[this._deg]*30;
 		let y = this._y + TBL_SIN[this._deg]*30;
 		line(this._x, this._y, x, y);
