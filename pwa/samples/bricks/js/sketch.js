@@ -10,13 +10,24 @@ const D = [[1,0],[1,1],[0,1]];
 const X = null;
 const BALL_SPD = 4;
 
+// const ptns = [
+// 	[O, B, X, D, A],
+// 	[C, A, X, C, A],
+// 	[D, O, B, D, B],
+// 	[O, A, X, C, O],
+// 	[C, O, X, X, C],
+// 	[X, B, X, X, D],
+// 	[X, X, X, X, X],
+// 	[X, X, X, X, X]
+// ];
+
 const ptns = [
-	[O, B, X, D, A],
-	[C, A, X, C, A],
-	[D, O, B, D, B],
-	[O, A, X, C, O],
-	[C, O, X, X, C],
-	[X, B, X, X, D],
+	[O, O, O, O, O],
+	[O, O, O, O, O],
+	[O, O, O, O, O],
+	[O, O, O, O, O],
+	[O, O, O, O, O],
+	[O, O, O, O, O],
 	[X, X, X, X, X],
 	[X, X, X, X, X]
 ];
@@ -62,7 +73,7 @@ function setup(){
 
 	// Balls
 	balls = [];
-	setTimeout(shotBall, 200);
+	setTimeout(shotBall, 5000);
 }
 
 function draw(){
@@ -99,7 +110,7 @@ function drawDummy(){
 
 function shotBall(){
 	// Splice
-	if(10 < balls.length) balls.splice(0, 1);
+	if(30 < balls.length) balls.splice(0, 1);
 
 	let x = gLine.x;
 	let y = gLine.y;
@@ -107,7 +118,7 @@ function shotBall(){
 	ball.setSpeed(BALL_SPD, gLine.deg);
 	balls.push(ball); 
 
-	setTimeout(shotBall, 1000);// Recursive
+	setTimeout(shotBall, 100);// Recursive
 }
 
 function bounceWalls(ball){
