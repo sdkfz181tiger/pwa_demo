@@ -1,0 +1,12 @@
+/* custom.css */
+
+body{
+	margin: 0px; padding: 0px;
+	background-color: #000000;
+	color: #cccccc;
+}
+
+@font-face {
+	font-family: "MisakiGothic"
+	src: url("../assets/misaki_gothic.ttf");
+}
